@@ -6,9 +6,48 @@
 // The program uses basic CRUD operations, with an additional Streamwriter
 // function for storing information into a .txt file.
 
+using System;
+
 namespace EmpDB
 {
-    internal class SalariedEmployee : Employee
+    public class SalariedEmployee : Employee
     {
+        private decimal weeklySalary;
+
+        // constructor using First/Last name,SSN, and Weekly salary 
+        public SalariedEmployee(string firstName, string lastName,
+           string socialSecurityNumber, decimal weeklySalary)
+           : base(firstName, lastName, socialSecurityNumber)
+        {
+            WeeklySalary = weeklySalary;
+        }
+
+        // property that gets and sets salary while validating that salaray is more than $0
+        public decimal WeeklySalary
+        {
+            get
+            {
+                return weeklySalary;
+            }
+            set
+            {
+                if (value < 0) // validation
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value),
+                       value, $"{nameof(WeeklySalary)} cannot be less than $0");
+                }
+                weeklySalary = value;
+            }
+        }
+
+        // calculates earnings by overriding the abstract method declared in base class, Employee
+        public override decimal Earnings() => WeeklySalary;
+
+        // return string representation of SalariedEmployee object
+        public override string ToString() =>
+           $"Salaried employee: {base.ToString()}\n" +
+           $"Weekly salary: {WeeklySalary:C}";
     }
+
+
 }

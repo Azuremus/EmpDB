@@ -24,10 +24,10 @@ namespace EmpDB
         public void TestMain()
         {
             // make 3 student objects
-            Employee emp1 = new SalariedEmployee();
-            Employee emp2 = new HourlyEmployee();
-            Employee emp3 = new CommisionEmployee();
-            Employee emp4 = new BasePlusCommissionEmployee();
+            Employee emp1 = new SalariedEmployee("Albert:", "Albertson", "111111111",3500.00m);
+            Employee emp2 = new HourlyEmployee("Bonnie","Bosch", "222222222", 15.45m, 40.00m);
+            Employee emp3 = new CommissionEmployee("Charlie", "Cook", "333333333", 7536.45m, 0.07m);
+            Employee emp4 = new BasePlusCommissionEmployee("David","Derelict", "444444444", 50097.05m, 0.05m,3000m);
 
 
             // add the 3 objects to the list
@@ -37,10 +37,10 @@ namespace EmpDB
             employees.Add(emp4);
 
             // make an anonymous object and put it in list
-            employees.Add(new SalariedEmployee());
-            employees.Add(new HourlyEmployee());
-            employees.Add(new CommisionEmployee());
-            employees.Add(new BasePlusCommissionEmployee());
+            employees.Add(new SalariedEmployee("Edgar","Evengard", "555555555",1300m));
+            employees.Add(new HourlyEmployee("Fred", "Flinstone", "666666666", 17.35m, 50m));
+            employees.Add(new CommissionEmployee("Gina", "Gladstone", "777777777",7500m, 0.08m));
+            employees.Add(new BasePlusCommissionEmployee("Howard", "Henderson","888888888", 7600m, .07m,3400m ));
 
 
             //Console.WriteLine(stu1);
