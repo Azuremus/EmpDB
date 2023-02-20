@@ -9,9 +9,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Change History
 // Date ------- Developer ----- Description
-// 2023-02-19 - Ryan Enyeart -- Initial creation of solution and pseudocode.
+// 2023-02-19 - Ryan Enyeart --  Initial creation of solution and pseudocode.
 // 2023-02-19 - Ryan Enyeart --  Creation of Employee inheritance hierarchy data object classes.
-// 2023-02-## - Caleb Ghirmai - 
+// 2023-02-19 - Caleb Ghirmai -  Creation of FindEmployeeRecord method.
+// 2023-02-19 - Caleb Ghirmai -  Creation of DisplayMainMenu method.
 // 2023-02-## - Ryan Enyeart -- 
 // 
 // 
