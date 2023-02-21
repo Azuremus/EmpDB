@@ -1,12 +1,4 @@
-﻿///////////////////////////////////////////////////////
-// TINFO 200 A, Winter 2023
-// UWTacoma SET, Caleb Ghirmai and Ryan Enyeart-Youngblood
-// 2023-03-04 - EmpDB - C# programming project - An employee payroll system
-// A database for tracking payroll information for 4 different employee types.
-// The program uses basic CRUD operations, with an additional Streamwriter
-// function for storing information into a .txt file.
-
-using System;
+﻿using System;
 
 namespace EmpDB
 {
@@ -16,9 +8,9 @@ namespace EmpDB
 
         // six-parameter constructor
         public BasePlusCommissionEmployee(string firstName, string lastName,
-           string socialSecurityNumber, decimal grossSales,
+           string email, decimal grossSales,
            decimal commissionRate, decimal baseSalary)
-           : base(firstName, lastName, socialSecurityNumber,
+           : base(firstName, lastName, email,
                 grossSales, commissionRate)
         {
             BaseSalary = baseSalary; // validates base salary
@@ -36,11 +28,15 @@ namespace EmpDB
             {
                 if (value < 0) // validation
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value),
-                       value, $"{nameof(BaseSalary)} must be >= 0");
+                    Console.WriteLine("Base salary must be >= 0");
+                    Console.Write("ENTER a valid value for base salary: ");
+                    string salary = Console.ReadLine();
+                    BaseSalary = ValidateDecimal(salary);
                 }
-
-                baseSalary = value;
+                else
+                {
+                    baseSalary = value;
+                }
             }
         }
 

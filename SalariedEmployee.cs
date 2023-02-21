@@ -1,12 +1,4 @@
-﻿///////////////////////////////////////////////////////
-// TINFO 200 A, Winter 2023
-// UWTacoma SET, Caleb Ghirmai and Ryan Enyeart-Youngblood
-// 2023-03-04 - EmpDB - C# programming project - An employee payroll system
-// A database for tracking payroll information for 4 different employee types.
-// The program uses basic CRUD operations, with an additional Streamwriter
-// function for storing information into a .txt file.
-
-using System;
+﻿using System;
 
 namespace EmpDB
 {
@@ -14,10 +6,10 @@ namespace EmpDB
     {
         private decimal weeklySalary;
 
-        // constructor using First/Last name,SSN, and Weekly salary 
+        // constructor using First/Last name,email, and Weekly salary 
         public SalariedEmployee(string firstName, string lastName,
-           string socialSecurityNumber, decimal weeklySalary)
-           : base(firstName, lastName, socialSecurityNumber)
+           string email, decimal weeklySalary)
+           : base(firstName, lastName, email)
         {
             WeeklySalary = weeklySalary;
         }
@@ -33,14 +25,19 @@ namespace EmpDB
             {
                 if (value < 0) // validation
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value),
-                       value, $"{nameof(WeeklySalary)} cannot be less than $0");
+                    Console.WriteLine("Weekly salary cannot be less than $0");
+                    Console.Write("ENTER a valid salary: ");
+                    string salary = Console.ReadLine();
+                    WeeklySalary = ValidateDecimal(salary);
                 }
-                weeklySalary = value;
+                else
+                {
+                    weeklySalary = value;
+                }
             }
         }
 
-        // calculates earnings by overriding the abstract method declared in base class, Employee
+        // calculates earnings by overriding the abstract method declared in the Employee base class
         public override decimal Earnings() => WeeklySalary;
 
         // return string representation of SalariedEmployee object

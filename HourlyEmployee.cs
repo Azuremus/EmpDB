@@ -1,12 +1,4 @@
-﻿///////////////////////////////////////////////////////
-// TINFO 200 A, Winter 2023
-// UWTacoma SET, Caleb Ghirmai and Ryan Enyeart-Youngblood
-// 2023-03-04 - EmpDB - C# programming project - An employee payroll system
-// A database for tracking payroll information for 4 different employee types.
-// The program uses basic CRUD operations, with an additional Streamwriter
-// function for storing information into a .txt file.
-
-using System;
+﻿using System;
 
 namespace EmpDB
 {
@@ -17,9 +9,9 @@ namespace EmpDB
 
         // five-parameter constructor
         public HourlyEmployee(string firstName, string lastName,
-           string socialSecurityNumber, decimal hourlyWage,
+           string email, decimal hourlyWage,
            decimal hoursWorked)
-           : base(firstName, lastName, socialSecurityNumber)
+           : base(firstName, lastName, email)
         {
             Wage = hourlyWage; // validate hourly wage
             Hours = hoursWorked; // validate hours worked
@@ -36,11 +28,15 @@ namespace EmpDB
             {
                 if (value < 0) // validation
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value),
-                       value, $"{nameof(Wage)} must be >= 0");
+                    Console.WriteLine("Hourly wage cannot be less than $0");
+                    Console.Write("ENTER a valid hourly wage: ");
+                    string hourlyWage = Console.ReadLine();
+                    Wage = ValidateDecimal(hourlyWage);
                 }
-
-                wage = value;
+                else
+                {
+                    wage = value;
+                }
             }
         }
 
@@ -55,11 +51,15 @@ namespace EmpDB
             {
                 if (value < 0 || value > 168) // validation
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value),
-                       value, $"{nameof(Hours)} must be >= 0 and <= 168");
+                    Console.WriteLine("Hours worked must be >= 0 and <= 168");
+                    Console.Write("ENTER a valid value for hours: ");
+                    string hoursWorked = Console.ReadLine();
+                    Hours = ValidateDecimal(hoursWorked);
                 }
-
-                hours = value;
+                else
+                {
+                    hours = value;
+                }
             }
         }
 

@@ -1,0 +1,8 @@
+C:\devl\projects\EmpDB\obj\Debug\EmpDB.csproj.AssemblyReference.cache
+C:\devl\projects\EmpDB\obj\Debug\EmpDB.csproj.SuggestedBindingRedirects.cache
+C:\devl\projects\EmpDB\obj\Debug\EmpDB.csproj.CoreCompileInputs.cache
+C:\devl\projects\EmpDB\bin\Debug\EmpDB.exe.config
+C:\devl\projects\EmpDB\bin\Debug\EmpDB.exe
+C:\devl\projects\EmpDB\bin\Debug\EmpDB.pdb
+C:\devl\projects\EmpDB\obj\Debug\EmpDB.exe
+C:\devl\projects\EmpDB\obj\Debug\EmpDB.pdb
