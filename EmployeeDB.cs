@@ -21,6 +21,46 @@ namespace EmpDB
             throw new NotImplementedException();
         }
 
+        // displays the main menu of options for
+        // employee CRUD operations
+        private void DisplayMainMenu()
+        {
+            Console.WriteLine(@"
+        ********************************************************
+        ***************EMPLOYEE DATABASE MAIN MENU***************
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        [A]dd new employee record
+        [E]dit an existing employee record
+        [D]elete an employee record
+        [F]ind an employee in the database
+        [P]rint out all employee records
+        [Q]uit the app after saving
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ");
+        }
+
+        // searches the list of employees for an employee
+        // with a matching social security number. If found,
+        // return the employee else null
+        private Employee FindEmployeeRecord(out string socialSecurityNumber)
+        {
+            Console.WriteLine("\nENTER the social security number of the employee to search: ");
+            socialSecurityNumber = Console.ReadLine();
+
+            foreach (var emp in employees)
+            {
+                if (socialSecurityNumber == emp.SocialSecurityNumber)
+                {
+                    Console.WriteLine($"FOUND social security number: {emp.SocialSecurityNumber}");
+                    return emp;
+                }
+            }
+            // no matching social security number
+            Console.WriteLine($"{socialSecurityNumber} NOT FOUND!");
+            return null;
+        }
+
+
         public void TestMain()
         {
             // make 3 student objects
