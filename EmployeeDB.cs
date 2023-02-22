@@ -1,13 +1,6 @@
-﻿///////////////////////////////////////////////////////
-// TINFO 200 A, Winter 2023
-// UWTacoma SET, Caleb Ghirmai and Ryan Enyeart-Youngblood
-// 2023-03-04 - EmpDB - C# programming project - An employee payroll system
-// A database for tracking payroll information for 4 different employee types.
-// The program uses basic CRUD operations, with an additional Streamwriter
-// function for storing information into a .txt file.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace EmpDB
 {
@@ -18,6 +11,7 @@ namespace EmpDB
 
         // storage container while the payroll app is running
         private List<Employee> employees = new List<Employee>();
+        
 
         public EmployeeDB()
         {
@@ -93,7 +87,7 @@ namespace EmpDB
                         break;
                     case 'Q':
                     case 'q':
-                        //QuitDatabaseAppAndSave();
+                        QuitDatabaseAppAndSave();
                         break;
                     default:
                         break;
@@ -101,6 +95,7 @@ namespace EmpDB
 
             }
         }
+
 
         // function: allows teh user to delete a current employee's record
         // precondition: the employee must exist
@@ -451,13 +446,32 @@ namespace EmpDB
         }
 
 
+        private void QuitDatabaseAppAndSave()
+        {
+            // 1 - make the file object and connect it to an actual file on disk
+            StreamWriter saveFile = new StreamWriter("_EMPLOYEE_SAVE_FILE_.txt");
+
+            // 2 - use the object
+            Console.WriteLine("\n***** Current contents of Employee Database *****");
+            foreach (Employee stu in employees)
+            {
+                // for now, echo the output to the shell for testing
+                Console.WriteLine(stu.ToStringForSaveFile());
+                saveFile.WriteLine(stu.ToStringForSaveFile());
+            }
+
+            // 3 - close the file object
+            saveFile.Close();
+            Environment.Exit(0);
+        }
+
         public void TestMain()
         {
             // make 3 student objects
-            Employee emp1 = new SalariedEmployee("Albert:", "Albertson", "111111111", 3500.00m);
-            Employee emp2 = new HourlyEmployee("Bonnie", "Bosch", "222222222", 15.45m, 40.00m);
-            Employee emp3 = new CommissionEmployee("Charlie", "Cook", "333333333", 7536.45m, 0.07m);
-            Employee emp4 = new BasePlusCommissionEmployee("David", "Derelict", "444444444", 50097.05m, 0.05m, 3000m);
+            Employee emp1 = new SalariedEmployee("Albert:", "Albertson", "aalberston@job.com", "111111111", 3500.00m);
+            Employee emp2 = new HourlyEmployee("Bonnie", "Bosch", "bbosch@job.com", "222222222", 15.45m, 40.00m);
+            Employee emp3 = new CommissionEmployee("Charlie", "Cook", "ccook@job.com", "333333333", 7536.45m, 0.07m);
+            Employee emp4 = new BasePlusCommissionEmployee("David", "Derelict", "dderelict@job.com", "444444444", 50097.05m, 0.05m, 3000m);
 
 
             // add the 3 objects to the list
@@ -467,10 +481,10 @@ namespace EmpDB
             employees.Add(emp4);
 
             // make an anonymous object and put it in list
-            employees.Add(new SalariedEmployee("Edgar", "Evengard", "555555555", 1300m));
-            employees.Add(new HourlyEmployee("Fred", "Flinstone", "666666666", 17.35m, 50m));
-            employees.Add(new CommissionEmployee("Gina", "Gladstone", "777777777", 7500m, 0.08m));
-            employees.Add(new BasePlusCommissionEmployee("Howard", "Henderson", "888888888", 7600m, .07m, 3400m));
+            employees.Add(new SalariedEmployee("Edgar", "Evengard", "eevengard@job.com", "555555555", 1300m));
+            employees.Add(new HourlyEmployee("Fred", "Flinstone", "fflinstone@job.com", "666666666", 17.35m, 50m));
+            employees.Add(new CommissionEmployee("Gina", "Gladstone", "ggladstone@job.com", "777777777", 7500m, 0.08m));
+            employees.Add(new BasePlusCommissionEmployee("Howard", "Henderson", "hhenderson@job.com", "888888888", 7600m, .07m, 3400m));
 
 
             //Console.WriteLine(stu1);

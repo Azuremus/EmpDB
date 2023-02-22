@@ -8,8 +8,8 @@ namespace EmpDB
 
         // constructor using First/Last name,email, and Weekly salary 
         public SalariedEmployee(string firstName, string lastName,
-           string email, decimal weeklySalary)
-           : base(firstName, lastName, email)
+           string email, string ssn, decimal weeklySalary)
+           : base(firstName, lastName, email, ssn)
         {
             WeeklySalary = weeklySalary;
         }
@@ -44,6 +44,12 @@ namespace EmpDB
         public override string ToString() =>
            $"Salaried employee: {base.ToString()}\n" +
            $"Weekly salary: {WeeklySalary:C}";
+        
+        public override string ToStringForSaveFile()
+        {
+            string str = GetType().Name + "\n";
+            return str + base.ToStringForSaveFile() + $"{WeeklySalary}";
+        }
     }
 
 

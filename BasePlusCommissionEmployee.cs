@@ -8,9 +8,9 @@ namespace EmpDB
 
         // six-parameter constructor
         public BasePlusCommissionEmployee(string firstName, string lastName,
-           string email, decimal grossSales,
+           string email,string ssn, decimal grossSales,
            decimal commissionRate, decimal baseSalary)
-           : base(firstName, lastName, email,
+           : base(firstName, lastName, email,ssn,
                 grossSales, commissionRate)
         {
             BaseSalary = baseSalary; // validates base salary
@@ -46,5 +46,10 @@ namespace EmpDB
         // return string representation of BasePlusCommissionEmployee
         public override string ToString() =>
            $"base-salaried {base.ToString()}\nbase salary: {BaseSalary:C}";
+
+        public override string ToStringForSaveFile()
+        {
+            return base.ToStringForSaveFile() + $"\n{BaseSalary}";
+        }
     }
 }

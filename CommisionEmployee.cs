@@ -9,9 +9,9 @@ namespace EmpDB
 
         // five-parameter constructor
         public CommissionEmployee(string firstName, string lastName,
-           string email, decimal grossSales,
+           string email, string ssn, decimal grossSales,
            decimal commissionRate)
-           : base(firstName, lastName, email)
+           : base(firstName, lastName, email, ssn)
         {
             GrossSales = grossSales; // validates gross sales
             CommissionRate = commissionRate; // validates commission rate
@@ -71,5 +71,11 @@ namespace EmpDB
            $"commission employee: {base.ToString()}\n" +
            $"gross sales: {GrossSales:C}\n" +
            $"commission rate: {CommissionRate:F2}";
+
+        public override string ToStringForSaveFile()
+        {
+            string str = GetType().Name + "\n";
+            return str + base.ToStringForSaveFile() + $"{GrossSales}\n{CommissionRate}";
+        }
     }
 }
