@@ -1,0 +1,8 @@
+E:\EmpDB\EmpDB\bin\Release\EmpDB.exe.config
+E:\EmpDB\EmpDB\bin\Release\EmpDB.exe
+E:\EmpDB\EmpDB\bin\Release\EmpDB.pdb
+E:\EmpDB\EmpDB\obj\Release\EmpDB.csproj.AssemblyReference.cache
+E:\EmpDB\EmpDB\obj\Release\EmpDB.csproj.SuggestedBindingRedirects.cache
+E:\EmpDB\EmpDB\obj\Release\EmpDB.csproj.CoreCompileInputs.cache
+E:\EmpDB\EmpDB\obj\Release\EmpDB.exe
+E:\EmpDB\EmpDB\obj\Release\EmpDB.pdb

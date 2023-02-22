@@ -16,8 +16,8 @@
 // 2023-02-19 - Caleb Ghirmai - Creation of DisplayMainMenu method.
 // 2023-02-21 - Ryan Enyeart -- Creation EditEmployeeRecord and DeleteEmployee methods.
 // 2023-02-21 - Ryan Enyeart -- Creation of ValidateDecimal method to validate user input.
-// 
-// 
+// 2023-02-21 - Caleb Ghirmai - Creation of ReadDataFromInputFile method.
+// 2023-02-21 - Caleb Ghirmai - Creation of PrintAllRecords method.
 // 
 // 
 // 

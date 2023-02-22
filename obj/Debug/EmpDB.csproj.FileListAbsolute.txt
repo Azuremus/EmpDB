@@ -6,3 +6,11 @@ C:\devl\projects\EmpDB\bin\Debug\EmpDB.exe
 C:\devl\projects\EmpDB\bin\Debug\EmpDB.pdb
 C:\devl\projects\EmpDB\obj\Debug\EmpDB.exe
 C:\devl\projects\EmpDB\obj\Debug\EmpDB.pdb
+E:\EmpDB\EmpDB\obj\Debug\EmpDB.csproj.AssemblyReference.cache
+E:\EmpDB\EmpDB\obj\Debug\EmpDB.csproj.SuggestedBindingRedirects.cache
+E:\EmpDB\EmpDB\obj\Debug\EmpDB.csproj.CoreCompileInputs.cache
+E:\EmpDB\EmpDB\obj\Debug\EmpDB.exe
+E:\EmpDB\EmpDB\obj\Debug\EmpDB.pdb
+E:\EmpDB\EmpDB\bin\Debug\EmpDB.exe.config
+E:\EmpDB\EmpDB\bin\Debug\EmpDB.exe
+E:\EmpDB\EmpDB\bin\Debug\EmpDB.pdb

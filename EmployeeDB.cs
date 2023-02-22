@@ -11,12 +11,15 @@ namespace EmpDB
 
         // storage container while the payroll app is running
         private List<Employee> employees = new List<Employee>();
-        
+
+        // input file to read employees fro
+        private const string EMPLOYEE_DATA_INPUTFILE = "EMPLOYEE_DATA_INPUTFILE.txt";
+
 
         public EmployeeDB()
         {
             if (_DEBUG_TEST_) TestMain();
-            //ReadDataFromInputFile();
+/*            ReadDataFromInputFile();*/
         }
 
         // function: displays the main menu of options for
@@ -83,7 +86,7 @@ namespace EmpDB
                         break;
                     case 'P':
                     case 'p':
-                        //PrintAllRecords();
+                        PrintAllRecords();
                         break;
                     case 'Q':
                     case 'q':
@@ -95,6 +98,8 @@ namespace EmpDB
 
             }
         }
+
+
 
 
         // function: allows teh user to delete a current employee's record
@@ -445,6 +450,90 @@ namespace EmpDB
             return null;
         }
 
+        // function: prints all existing employee records
+        // precondition: the client has selected the menu option 'P' to print all employee records
+        // input: none
+        // output: none
+        // postcondition: a printout of all existing employee records
+        private void PrintAllRecords()
+        {
+            foreach(var emp in employees)
+            {
+                Console.WriteLine(emp);
+            }
+        }
+
+        // function: reads the input file of employee records and stores them in a list
+        // precondition: the client has run the program and data is expected to be read instantly
+        // input: none
+        // output: none
+        // postcondition: a local list stores each employee record from the file
+        private void ReadDataFromInputFile()
+        {
+            // 1 - make the file object and connect to the file on disk.
+            StreamReader inFile = new StreamReader(EMPLOYEE_DATA_INPUTFILE);
+
+            // 2 - use the file
+            string employeeType = string.Empty;
+            while ((employeeType = inFile.ReadLine()) != null)
+            {
+                // gather the essential information from the employee
+                string firstName = inFile.ReadLine();
+                string lastName = inFile.ReadLine();
+                string emailAdress = inFile.ReadLine();
+                string socialSecurityNumber = inFile.ReadLine();
+
+                if (employeeType == "HourlyEmployee")
+                {
+                    // get wage and hours worked
+                    decimal hourlyWage = decimal.Parse(inFile.ReadLine());
+                    decimal hoursWorked = decimal.Parse(inFile.ReadLine());
+                    
+
+                    // create HourlyEmployee object and store into list
+                    HourlyEmployee employee = new HourlyEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
+                        hourlyWage, hoursWorked);
+                    employees.Add(employee);
+                }
+                else if (employeeType == "SalariedEmployee")
+                {
+                    // get weekly salary
+                    decimal weeklySalary = decimal.Parse(inFile.ReadLine());
+
+                    // create HourlyEmployee object and store into list
+                    SalariedEmployee employee = new SalariedEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
+                        weeklySalary);
+                    employees.Add(employee);
+                }
+                else if(employeeType == "CommissionEmployee")
+                {
+                    // get gross weekly sales and commission rate
+                    decimal grossSales = decimal.Parse(inFile.ReadLine());
+                    decimal commissionRate = decimal.Parse(inFile.ReadLine());
+
+                    // create CommissionEmployee object and store into list
+                    CommissionEmployee employee = new CommissionEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
+                        grossSales, commissionRate);
+                    employees.Add(employee);
+                }
+
+                else if(employeeType == "BasePlusCommissionEmployee")
+                {
+                    // get gross weekly sales, commission rate, and base salary
+                    decimal grossSales = decimal.Parse(inFile.ReadLine());
+                    decimal commissionRate = decimal.Parse(inFile.ReadLine());
+                    decimal baseSalary = decimal.Parse(inFile.ReadLine());
+
+                    // create HourlyEmployee object and store into list
+                    BasePlusCommissionEmployee employee = new BasePlusCommissionEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
+                        grossSales, commissionRate, baseSalary);
+                    employees.Add(employee);
+                }
+            }
+            // 3 - Close the resource - once, when all reading is done
+            inFile.Close();
+        }
+
 
         private void QuitDatabaseAppAndSave()
         {
@@ -467,14 +556,16 @@ namespace EmpDB
 
         public void TestMain()
         {
-            // make 3 student objects
+            // Read employees from input file
+            ReadDataFromInputFile();
+/*            // make 4 employee objects
             Employee emp1 = new SalariedEmployee("Albert:", "Albertson", "aalberston@job.com", "111111111", 3500.00m);
             Employee emp2 = new HourlyEmployee("Bonnie", "Bosch", "bbosch@job.com", "222222222", 15.45m, 40.00m);
             Employee emp3 = new CommissionEmployee("Charlie", "Cook", "ccook@job.com", "333333333", 7536.45m, 0.07m);
             Employee emp4 = new BasePlusCommissionEmployee("David", "Derelict", "dderelict@job.com", "444444444", 50097.05m, 0.05m, 3000m);
 
 
-            // add the 3 objects to the list
+            // add the 4 objects to the list
             employees.Add(emp1);
             employees.Add(emp2);
             employees.Add(emp3);
@@ -484,7 +575,7 @@ namespace EmpDB
             employees.Add(new SalariedEmployee("Edgar", "Evengard", "eevengard@job.com", "555555555", 1300m));
             employees.Add(new HourlyEmployee("Fred", "Flinstone", "fflinstone@job.com", "666666666", 17.35m, 50m));
             employees.Add(new CommissionEmployee("Gina", "Gladstone", "ggladstone@job.com", "777777777", 7500m, 0.08m));
-            employees.Add(new BasePlusCommissionEmployee("Howard", "Henderson", "hhenderson@job.com", "888888888", 7600m, .07m, 3400m));
+            employees.Add(new BasePlusCommissionEmployee("Howard", "Henderson", "hhenderson@job.com", "888888888", 7600m, .07m, 3400m));*/
 
 
             //Console.WriteLine(stu1);
