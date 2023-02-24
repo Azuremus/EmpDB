@@ -13,12 +13,13 @@ class PayrollSystemTest
       // create derived-class objects
       var salariedEmployee = new SalariedEmployee("John", "Smith","test@test.com",
           "111-11-1111", 800.00M);
-      var hourlyEmployee = new HourlyEmployee("Karen", "Price",
-         "222-22-2222", 16.75M, 40.0M);
-      var commissionEmployee = new CommissionEmployee("Sue", "Jones",
-         "333-33-3333", 10000.00M, .06M);
+      var hourlyEmployee = new HourlyEmployee("Karen", "Price", "kprice@test.com",
+         "222-22-2222", 16.75M, 60.60M);
+        var commissionEmployee = new CommissionEmployee("Sue", "Jones", "sjones@test.com",
+  
+           "333-33-3333", 10000.00M, .06M);
       var basePlusCommissionEmployee =
-         new BasePlusCommissionEmployee("Bob", "Lewis",
+         new BasePlusCommissionEmployee("Bob", "Lewis", "blewis@test.com",
          "444-44-4444", 5000.00M, .04M, 300.00M);
 
       Console.WriteLine("Employees processed individually:\n");

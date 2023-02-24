@@ -70,7 +70,7 @@ namespace EmpDB
                 {
                     case 'A':
                     case 'a':
-                        //AddNewEmployee();
+                        AddNewEmployee();
                         break;
                     case 'E':
                     case 'e':
@@ -98,9 +98,6 @@ namespace EmpDB
 
             }
         }
-
-
-
 
         // function: allows teh user to delete a current employee's record
         // precondition: the employee must exist
@@ -138,6 +135,104 @@ namespace EmpDB
                             break;
                     }
                 }
+            }
+        }
+
+
+        // function: allows the client to add a new employee record
+        // precondition: the client has selected 'a' or 'A' at the menu
+        // input:  none
+        // output: none
+        // postcondition: the new employee record is saved
+        private void AddNewEmployee()
+        {
+            Console.Write("Enter first name of employee:");
+            string firstName = Console.ReadLine();
+            Console.Write("Enter last name of employee:");
+            string lastName = Console.ReadLine();
+            Console.Write("Enter email of employee:");
+            string email = Console.ReadLine();
+            Console.Write("Enter employee's social security number:");
+            string socialSecurityNumber = Console.ReadLine();
+
+        Console.WriteLine("Select an employee type");
+            Console.WriteLine(@"
+        ********************************************************
+        ***************Employee Type***************
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        [H]ourly
+        [S]alaried
+        [C]ommission 
+        [B]ase plus commission
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ");
+
+            char selection = GetUserInputChar();
+
+            // process a new hourly employee
+            if (selection == 'H' || selection == 'h')
+            {
+                Console.Write("Enter the employee's wage per hour: ");
+                decimal wage = decimal.Parse(Console.ReadLine());
+                Console.Write("Enter employee's hours worked for the week: ");
+                decimal hoursWorked = decimal.Parse(Console.ReadLine());
+
+                // create a new HourlyEmployee object
+                HourlyEmployee employee = new HourlyEmployee(firstName, lastName, email,
+                    socialSecurityNumber, wage, hoursWorked);
+
+                // add new employee record to the list
+                employees.Add(employee);
+            }
+            // process a new salaried employee
+            else if (selection == 'S' || selection == 's')
+            {
+                Console.Write("Enter the employee's wage per hour: ");
+                decimal weeklySalary = decimal.Parse(Console.ReadLine());
+
+                // create a new SalariedEmployee object
+                SalariedEmployee employee = new SalariedEmployee(firstName, lastName, email,
+                    socialSecurityNumber, weeklySalary);
+
+                // add new employee record to the list
+                employees.Add(employee);
+            }
+            // process a new commission employee
+            else if (selection == 'C' || selection == 'c')
+            {
+                Console.Write("Enter the employee's gross sales: ");
+                decimal grossSales = decimal.Parse(Console.ReadLine());
+                Console.Write("Enter the employee's commission rate: ");
+                decimal commissionRate = decimal.Parse(Console.ReadLine());
+
+                // create a new CommissionEmployee object
+                CommissionEmployee employee = new CommissionEmployee(firstName, lastName, email,
+                    socialSecurityNumber, grossSales, commissionRate);
+
+                // add new employee record to the list
+                employees.Add(employee);
+            }
+            // process a new base plus commission employee
+            else if (selection == 'B' || selection == 'b')
+            {
+                Console.Write("Enter the employee's gross sales: ");
+                decimal grossSales = decimal.Parse(Console.ReadLine());
+                Console.Write("Enter the employee's commission rate: ");
+                decimal commissionRate = decimal.Parse(Console.ReadLine());
+                Console.Write("Enter the employee's base salary: ");
+                decimal baseSalary = decimal.Parse(Console.ReadLine());
+
+                // create a new BasePlusCommissionEmployee object
+                BasePlusCommissionEmployee employee = new BasePlusCommissionEmployee(firstName,
+                    lastName, email, socialSecurityNumber, grossSales, commissionRate, baseSalary);
+
+                // add new employee record to the list
+                employees.Add(employee);
+            }
+            // invalid input - no employee type match
+            else
+            {
+                Console.WriteLine("Invalid input. No employee type found!");
             }
         }
 
@@ -491,7 +586,6 @@ namespace EmpDB
                     decimal hourlyWage = decimal.Parse(inFile.ReadLine());
                     decimal hoursWorked = decimal.Parse(inFile.ReadLine());
                     
-
                     // create HourlyEmployee object and store into list
                     HourlyEmployee employee = new HourlyEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
                         hourlyWage, hoursWorked);
@@ -502,7 +596,7 @@ namespace EmpDB
                     // get weekly salary
                     decimal weeklySalary = decimal.Parse(inFile.ReadLine());
 
-                    // create HourlyEmployee object and store into list
+                    // create SalariedEmployee object and store into list
                     SalariedEmployee employee = new SalariedEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
                         weeklySalary);
                     employees.Add(employee);
@@ -526,7 +620,7 @@ namespace EmpDB
                     decimal commissionRate = decimal.Parse(inFile.ReadLine());
                     decimal baseSalary = decimal.Parse(inFile.ReadLine());
 
-                    // create HourlyEmployee object and store into list
+                    // create BasePlusCommissionEmployee object and store into list
                     BasePlusCommissionEmployee employee = new BasePlusCommissionEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
                         grossSales, commissionRate, baseSalary);
                     employees.Add(employee);
