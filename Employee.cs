@@ -1,8 +1,12 @@
-﻿using System;
+﻿// (C)Copyright 1992 - 2017 by Deitel & Associates, Inc. and
+// Pearson Education, Inc. All Rights Reserved.                   
+using System;
 
 namespace EmpDB
 {
-    public abstract class Employee
+    // Fig. 12.4: Employee.cs
+    // Employee abstract base class.
+    public abstract class Employee : IPayable
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -22,7 +26,7 @@ namespace EmpDB
         // return string representation of Employee object, using properties
         public override string ToString() => $"{FirstName} {LastName}\n" +
            $"Email address: {EmailAddress}" +
-            $"Social Security Number: {SocialSecurityNumber}";
+            $"\nSocial Security Number: {SocialSecurityNumber}";
 
         public virtual string ToStringForSaveFile()
         {
@@ -47,5 +51,7 @@ namespace EmpDB
             }
             return result;
         }
+
+        public decimal GetPaymentAmount() => Earnings();
     }
 }

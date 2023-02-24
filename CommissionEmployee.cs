@@ -1,13 +1,16 @@
-﻿using System;
-
+﻿// (C) Copyright 1992-2017 by Deitel & Associates, Inc. and
+// Pearson Education, Inc. All Rights Reserved.            
+using System;
 namespace EmpDB
 {
-    public class CommissionEmployee : Employee
+    // Fig. 12.7: CommissionEmployee.cs
+    // CommissionEmployee class that extends Employee.
+    public class CommissionEmployee : Employee, IPayable
     {
         private decimal grossSales; // gross weekly sales
         private decimal commissionRate; // commission percentage
 
-        // five-parameter constructor
+        // six-parameter constructor
         public CommissionEmployee(string firstName, string lastName,
            string email, string ssn, decimal grossSales,
            decimal commissionRate)
@@ -29,7 +32,7 @@ namespace EmpDB
                 if (value < 0) // validation
                 {
                     Console.WriteLine("Gross sales must be >= 0");
-                    Console.Write("ENTER a valid value for gross sales: ");
+                    Console.Write($"ENTER a valid gross sales for {FirstName} {LastName}: ");
                     string sales = Console.ReadLine();
                     GrossSales = ValidateDecimal(sales);
                 }
@@ -52,7 +55,7 @@ namespace EmpDB
                 if (value <= 0 || value >= 1) // validation
                 {
                     Console.WriteLine("Commission rate must be > 0 and < 1");
-                    Console.Write("ENTER a valid value for commission rate: ");
+                    Console.Write($"ENTER a valid commission rate for {FirstName} {LastName}: ");
                     string rate = Console.ReadLine();
                     CommissionRate = ValidateDecimal(rate);
                 }
@@ -66,11 +69,14 @@ namespace EmpDB
         // calculate earnings; override abstract method Earnings in Employee
         public override decimal Earnings() => CommissionRate * GrossSales;
 
+        public decimal GetPaymentAmount() => Earnings();
+        
+
         // return string representation of CommissionEmployee object
         public override string ToString() =>
-           $"commission employee: {base.ToString()}\n" +
-           $"gross sales: {GrossSales:C}\n" +
-           $"commission rate: {CommissionRate:F2}";
+           $"Commission employee: {base.ToString()}\n" +
+           $"Gross sales: {GrossSales:C}\n" +
+           $"Commission rate: {CommissionRate:F2}";
 
         public override string ToStringForSaveFile()
         {

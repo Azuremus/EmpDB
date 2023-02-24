@@ -386,13 +386,13 @@ namespace EmpDB
         // input: a singl
         // output: the va
         // postcondition:
-        /*private decimal ValidateDecimal(string number)
+        /*private decimal ValidateInteger(string number)
         {
             if (!(decimal.TryParse(number, out decimal result)))
             {
                 Console.Write("Please ENTER decimal values ONLY: ");
                 number = Console.ReadLine();
-                result = ValidateDecimal(number);
+                result = ValidateInteger(number);
             }
             return result;
         }*/
@@ -459,7 +459,9 @@ namespace EmpDB
         {
             foreach(var emp in employees)
             {
+                Console.WriteLine("\n***********************************");
                 Console.WriteLine(emp);
+                Console.WriteLine($"Earnings: {emp.Earnings():c}");
             }
         }
 

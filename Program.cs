@@ -15,7 +15,7 @@
 // 2023-02-19 - Caleb Ghirmai - Creation of FindEmployeeRecord method.
 // 2023-02-19 - Caleb Ghirmai - Creation of DisplayMainMenu method.
 // 2023-02-21 - Ryan Enyeart -- Creation EditEmployeeRecord and DeleteEmployee methods.
-// 2023-02-21 - Ryan Enyeart -- Creation of ValidateDecimal method to validate user input.
+// 2023-02-21 - Ryan Enyeart -- Creation of ValidateInteger method to validate user input.
 // 2023-02-21 - Caleb Ghirmai - Creation of ReadDataFromInputFile method.
 // 2023-02-21 - Caleb Ghirmai - Creation of PrintAllRecords method.
 // 
@@ -36,6 +36,7 @@ namespace EmpDB
         {
             // Preliminary testing of the data object class
             //TestMain();
+            PayrollSystemTest main= new PayrollSystemTest();
 
             EmployeeDB payrollSystem = new EmployeeDB();
 

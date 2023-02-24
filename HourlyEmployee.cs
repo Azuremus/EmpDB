@@ -1,8 +1,12 @@
-﻿using System;
+﻿//  (C) Copyright 1992-2017 by Deitel & Associates, Inc. and               
+// Pearson Education, Inc.All Rights Reserved.               
+using System;
 
 namespace EmpDB
 {
-    public class HourlyEmployee : Employee
+    // Fig. 12.6: HourlyEmployee.cs
+    // HourlyEmployee class that extends Employee.
+    public class HourlyEmployee : Employee, IPayable
     {
         private decimal wage; // wage per hour
         private decimal hours; // hours worked for the week
@@ -29,7 +33,7 @@ namespace EmpDB
                 if (value < 0) // validation
                 {
                     Console.WriteLine("Hourly wage cannot be less than $0");
-                    Console.Write("ENTER a valid hourly wage: ");
+                    Console.Write($"ENTER a valid hourly wage for {FirstName} {LastName}: ");
                     string hourlyWage = Console.ReadLine();
                     Wage = ValidateDecimal(hourlyWage);
                 }
@@ -52,7 +56,7 @@ namespace EmpDB
                 if (value < 0 || value > 168) // validation
                 {
                     Console.WriteLine("Hours worked must be >= 0 and <= 168");
-                    Console.Write("ENTER a valid value for hours: ");
+                    Console.Write($"ENTER valid hours for {FirstName} {LastName}: ");
                     string hoursWorked = Console.ReadLine();
                     Hours = ValidateDecimal(hoursWorked);
                 }
@@ -76,10 +80,13 @@ namespace EmpDB
             }
         }
 
+        public decimal GetPaymentAmount() => Earnings();
+        
+
         // return string representation of HourlyEmployee object
         public override string ToString() =>
-           $"hourly employee: {base.ToString()}\n" +
-           $"hourly wage: {Wage:C}\nhours worked: {Hours:F2}";
+           $"Hourly employee: {base.ToString()}\n" +
+           $"Hourly wage: {Wage:C}\nhours worked: {Hours:F2}";
 
         public override string ToStringForSaveFile()
         {

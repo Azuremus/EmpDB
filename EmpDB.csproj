@@ -48,6 +48,10 @@
     <Compile Include="Employee.cs" />
     <Compile Include="EmployeeDB.cs" />
     <Compile Include="HourlyEmployee.cs" />
+    <Compile Include="Invoice.cs" />
+    <Compile Include="IPayable.cs" />
+    <Compile Include="PayableInterfaceTest.cs" />
+    <Compile Include="PayrollSystemTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SalariedEmployee.cs" />
