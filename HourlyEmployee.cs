@@ -20,12 +20,7 @@ namespace EmpDB
             Wage = hourlyWage; // validate hourly wage
             Hours = hoursWorked; // validate hours worked
         }
-        public HourlyEmployee(string firstName, string lastName,
-           string email, string ssn) :base(firstName, lastName, email, ssn)
-        {
-            
-        }
-
+        
         // property that gets and sets hourly employee's wage
         public decimal Wage
         {

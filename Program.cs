@@ -23,7 +23,7 @@
 // 2023-02-23 - Ryan Enyeart -- Creation of PayableInterfaceTest class.
 // 2023-02-23 - Ryan Enyeart -- Creation of PayrollSystemTest class.
 // 2023-02-23 - Caleb Ghirmai - Creation of AddNewEmployee method.
-//
+// 2023-02-25 - Ryan Enyeart -- Modified AddNewEmployee method to use the ValidateDecimal method.
 //
 using System;
 using System.Collections.Generic;
