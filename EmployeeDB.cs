@@ -30,7 +30,7 @@ namespace EmpDB
         // postconditions: the user knows what keys to enter for the GoPayroll method
         private void DisplayMainMenu()
         {
-            Console.WriteLine(@"
+            Console.Write(@"
         ********************************************************
         ***************EMPLOYEE DATABASE MAIN MENU***************
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,7 +41,7 @@ namespace EmpDB
         [P]rint out all employee records
         [Q]uit the app after saving
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        ");
+        Please ENTER your selection: ");
         }
 
         // function:main user interface for the paroll app
@@ -146,7 +146,7 @@ namespace EmpDB
         // postcondition: the new employee record is saved
         private void AddNewEmployee()
         {
-            Console.Write("Enter first name of employee:");
+            Console.Write("\nEnter first name of employee:");
             string firstName = Console.ReadLine();
             Console.Write("Enter last name of employee:");
             string lastName = Console.ReadLine();
@@ -172,14 +172,23 @@ namespace EmpDB
             // process a new hourly employee
             if (selection == 'H' || selection == 'h')
             {
-                Console.Write("Enter the employee's wage per hour: ");
+                /*Console.Write("\nEnter the employee's wage per hour: ");
                 decimal wage = decimal.Parse(Console.ReadLine());
                 Console.Write("Enter employee's hours worked for the week: ");
                 decimal hoursWorked = decimal.Parse(Console.ReadLine());
 
                 // create a new HourlyEmployee object
                 HourlyEmployee employee = new HourlyEmployee(firstName, lastName, email,
-                    socialSecurityNumber, wage, hoursWorked);
+                    socialSecurityNumber, wage, hoursWorked);*/
+
+/////// This is version will validate user input to prevent an exception
+                HourlyEmployee employee = new HourlyEmployee(firstName,lastName,email,socialSecurityNumber);
+                Console.Write("\nEnter the employee's wage per hour: ");
+                string wage = Console.ReadLine();
+                employee.Wage = employee.ValidateDecimal(wage);
+                Console.Write("Enter employee's hours worked for the week: ");
+                string hoursWorked = Console.ReadLine();
+                employee.Hours = employee.ValidateDecimal(hoursWorked);
 
                 // add new employee record to the list
                 employees.Add(employee);
@@ -187,7 +196,7 @@ namespace EmpDB
             // process a new salaried employee
             else if (selection == 'S' || selection == 's')
             {
-                Console.Write("Enter the employee's wage per hour: ");
+                Console.Write("\nEnter the employee's weekly salary: ");
                 decimal weeklySalary = decimal.Parse(Console.ReadLine());
 
                 // create a new SalariedEmployee object
@@ -200,9 +209,9 @@ namespace EmpDB
             // process a new commission employee
             else if (selection == 'C' || selection == 'c')
             {
-                Console.Write("Enter the employee's gross sales: ");
+                Console.Write("\nEnter the employee's gross sales: ");
                 decimal grossSales = decimal.Parse(Console.ReadLine());
-                Console.Write("Enter the employee's commission rate: ");
+                Console.Write("\nEnter the employee's commission rate: ");
                 decimal commissionRate = decimal.Parse(Console.ReadLine());
 
                 // create a new CommissionEmployee object
@@ -215,7 +224,7 @@ namespace EmpDB
             // process a new base plus commission employee
             else if (selection == 'B' || selection == 'b')
             {
-                Console.Write("Enter the employee's gross sales: ");
+                Console.Write("\nEnter the employee's gross sales: ");
                 decimal grossSales = decimal.Parse(Console.ReadLine());
                 Console.Write("Enter the employee's commission rate: ");
                 decimal commissionRate = decimal.Parse(Console.ReadLine());
@@ -232,7 +241,7 @@ namespace EmpDB
             // invalid input - no employee type match
             else
             {
-                Console.WriteLine("Invalid input. No employee type found!");
+                Console.WriteLine("\nInvalid input. No employee type found!");
             }
         }
 
@@ -255,6 +264,7 @@ namespace EmpDB
             if (emp != null)
             {
                 // Employee exists, so their record can be edited
+                Console.WriteLine();
                 EditEmployee(emp);
             }
             else
@@ -279,34 +289,37 @@ namespace EmpDB
             {
                 Console.Write(emp);
             }
-            Console.WriteLine($"\nEditing record of a: {employeeType}");
+            Console.WriteLine($"\n\n\t\tEditing record of a: {employeeType}");
             EditEmployeeMenu();
             char choice = GetUserInputChar();
-
-            if (employeeType == "SalariedEmployee")
+            bool validChoice = false;
+            while (validChoice == false)
             {
-                SalariedEmployee salaried = emp as SalariedEmployee;
-                switch (choice)
+                if (employeeType == "SalariedEmployee")
                 {
-                    case 'S':
-                    case 's':
-                        Console.Write("\nENTER new weekly salary: ");
-                        string salary = Console.ReadLine();
-                        salaried.WeeklySalary = salaried.ValidateDecimal(salary);
-                        break;
-                    // these cases notify user that they chose an invalid option for
-                    // a Salaried employee
-                    case 'W':
-                    case 'w':
-                    case 'H':
-                    case 'h':
-                    case 'G':
-                    case 'g':
-                    case 'C':
-                    case 'c':
-                    case 'B':
-                    case 'b':
-                        Console.WriteLine(@"
+                    SalariedEmployee salaried = emp as SalariedEmployee;
+                    switch (choice)
+                    {
+                        case 'S':
+                        case 's':
+                            Console.Write("\nENTER new weekly salary: ");
+                            string salary = Console.ReadLine();
+                            salaried.WeeklySalary = salaried.ValidateDecimal(salary);
+                            validChoice= true;
+                            break;
+                        // these cases notify user that they chose an invalid option for
+                        // a Salaried employee
+                        case 'W':
+                        case 'w':
+                        case 'H':
+                        case 'h':
+                        case 'G':
+                        case 'g':
+                        case 'C':
+                        case 'c':
+                        case 'B':
+                        case 'b':
+                            Console.WriteLine(@"
         ***********************************************
         ***********************************************
         ***********************************************
@@ -318,37 +331,39 @@ namespace EmpDB
         ***********************************************
         ***********************************************
         ");
-                        break;
+                            break;
+                    }
                 }
-            }
-            else if (employeeType == "HourlyEmployee")
-            {
-                HourlyEmployee hourlyEmployee = emp as HourlyEmployee;
-                switch (choice)
+                else if (employeeType == "HourlyEmployee")
                 {
-                    case 'W':
-                    case 'w':
-                        Console.Write("\nENTER new hourly wage: ");
-                        string wage = Console.ReadLine();
-                        hourlyEmployee.Wage = hourlyEmployee.ValidateDecimal(wage);
-                        break;
-                    case 'H':
-                    case 'h':
-                        Console.Write("\nENTER new hours worked: ");
-                        string hours = Console.ReadLine();
-                        hourlyEmployee.Wage = hourlyEmployee.ValidateDecimal(hours); 
-                        break;
-                    // these cases notify user that they chose an invalid option for
-                    // a Salaried employee
-                    case 'S':
-                    case 's':
-                    case 'G':
-                    case 'g':
-                    case 'C':
-                    case 'c':
-                    case 'B':
-                    case 'b':
-                        Console.WriteLine(@"
+                    HourlyEmployee hourlyEmployee = emp as HourlyEmployee;
+                    switch (choice)
+                    {
+                        case 'W':
+                        case 'w':
+                            Console.Write("\nENTER new hourly wage: ");
+                            string wage = Console.ReadLine();
+                            hourlyEmployee.Wage = hourlyEmployee.ValidateDecimal(wage);
+                            validChoice= true;
+                            break;
+                        case 'H':
+                        case 'h':
+                            Console.Write("\nENTER new hours worked: ");
+                            string hours = Console.ReadLine();
+                            hourlyEmployee.Wage = hourlyEmployee.ValidateDecimal(hours);
+                            validChoice= true;
+                            break;
+                        // these cases notify user that they chose an invalid option for
+                        // a Salaried employee
+                        case 'S':
+                        case 's':
+                        case 'G':
+                        case 'g':
+                        case 'C':
+                        case 'c':
+                        case 'B':
+                        case 'b':
+                            Console.WriteLine(@"
         ***********************************************
         ***********************************************
         ***********************************************
@@ -360,37 +375,39 @@ namespace EmpDB
         ***********************************************
         ***********************************************
         ");
-                        break;
+                            break;
+                    }
                 }
-            }
-            else if (employeeType == "CommissionEmployee")
-            {
-                CommissionEmployee commisionEmployee = emp as CommissionEmployee;
-                switch (choice)
+                else if (employeeType == "CommissionEmployee")
                 {
-                    case 'G':
-                    case 'g':
-                        Console.Write("\nENTER new gross sales: ");
-                        string sales = Console.ReadLine();
-                        commisionEmployee.GrossSales = commisionEmployee.ValidateDecimal(sales);
-                        break;
-                    case 'C':
-                    case 'c':
-                        Console.Write("\nENTER new commission rate: ");
-                        string rate = Console.ReadLine();
-                        commisionEmployee.CommissionRate = commisionEmployee.ValidateDecimal(rate);
-                        break;
-                    // these cases notify user that they chose an invalid option for
-                    // a Salaried employee
-                    case 'S':
-                    case 's':
-                    case 'W':
-                    case 'w':
-                    case 'H':
-                    case 'h':
-                    case 'B':
-                    case 'b':
-                        Console.WriteLine(@"
+                    CommissionEmployee commisionEmployee = emp as CommissionEmployee;
+                    switch (choice)
+                    {
+                        case 'G':
+                        case 'g':
+                            Console.Write("\nENTER new gross sales: ");
+                            string sales = Console.ReadLine();
+                            commisionEmployee.GrossSales = commisionEmployee.ValidateDecimal(sales);
+                            validChoice = true;
+                            break;
+                        case 'C':
+                        case 'c':
+                            Console.Write("\nENTER new commission rate: ");
+                            string rate = Console.ReadLine();
+                            commisionEmployee.CommissionRate = commisionEmployee.ValidateDecimal(rate);
+                            validChoice = true;
+                            break;
+                        // these cases notify user that they chose an invalid option for
+                        // a Salaried employee
+                        case 'S':
+                        case 's':
+                        case 'W':
+                        case 'w':
+                        case 'H':
+                        case 'h':
+                        case 'B':
+                        case 'b':
+                            Console.WriteLine(@"
         ***********************************************
         ***********************************************
         ***********************************************
@@ -402,33 +419,34 @@ namespace EmpDB
         ***********************************************
         ***********************************************
         ");
-                        break;
+                            break;
+                    }
                 }
-            }
-            else if (employeeType == "BasePlusCommissionEmployee")
-            {
-                BasePlusCommissionEmployee basePlusCommisionEmployee = emp as BasePlusCommissionEmployee;
-                switch (choice)
+                else if (employeeType == "BasePlusCommissionEmployee")
                 {
-                    case 'B':
-                    case 'b':
-                        Console.Write("\nENTER new base salary: ");
-                        string salary = Console.ReadLine();
-                        basePlusCommisionEmployee.GrossSales = basePlusCommisionEmployee.ValidateDecimal(salary);
-                        break;
-                    // these cases notify user that they chose an invalid option for
-                    // a Salaried employee
-                    case 'S':
-                    case 's':
-                    case 'W':
-                    case 'w':
-                    case 'H':
-                    case 'h':
-                    case 'G':
-                    case 'g':
-                    case 'C':
-                    case 'c':
-                        Console.WriteLine(@"
+                    BasePlusCommissionEmployee basePlusCommisionEmployee = emp as BasePlusCommissionEmployee;
+                    switch (choice)
+                    {
+                        case 'B':
+                        case 'b':
+                            Console.Write("\nENTER new base salary: ");
+                            string salary = Console.ReadLine();
+                            basePlusCommisionEmployee.GrossSales = basePlusCommisionEmployee.ValidateDecimal(salary);
+                            validChoice = true;
+                            break;
+                        // these cases notify user that they chose an invalid option for
+                        // a Salaried employee
+                        case 'S':
+                        case 's':
+                        case 'W':
+                        case 'w':
+                        case 'H':
+                        case 'h':
+                        case 'G':
+                        case 'g':
+                        case 'C':
+                        case 'c':
+                            Console.WriteLine(@"
         ***********************************************
         ***********************************************
         ***********************************************
@@ -440,37 +458,43 @@ namespace EmpDB
         ***********************************************
         ***********************************************
         ");
+                            break;
+                    }
+                }
+                switch (choice)
+                {
+                    case 'F':
+                    case 'f':
+                        Console.Write("\nENTER new first name: ");
+                        emp.FirstName = Console.ReadLine();
+                        validChoice = true;
+                        break;
+                    case 'L':
+                    case 'l':
+                        Console.Write("\nENTER new last name: ");
+                        emp.LastName = Console.ReadLine();
+                        validChoice = true;
+                        break;
+                    // gives user option to quit to main menu
+                    case 'X':
+                    case 'x':
+                    case 'Q':
+                    case 'q':
+                        Console.Clear();
+                        GoPayroll();
+                        validChoice = true;
+                        break;
+                    /////////////// case '`':
+                    //////////////     BackdoorAccess();
+                    /////////////      break;
+                    default:
+                        Console.WriteLine("\n\n\t\t***********************************");
+                        Console.WriteLine("\n\t\tInvalid selection! \n\t\tPlease ENTER a valid selection for:\n ");
+                        EditEmployee(emp);
                         break;
                 }
             }
-            switch (choice)
-            {
-                case 'F':
-                case 'f':
-                    Console.Write("\nENTER new first name: ");
-                    emp.FirstName = Console.ReadLine();
-                    break;
-                case 'L':
-                case 'l':
-                    Console.Write("\nENTER new last name: ");
-                    emp.LastName = Console.ReadLine();
-                    break;
-                // gives user option to quit to main menu
-                case 'X':
-                case 'x':
-                case 'Q':
-                case 'q':
-                    Console.Clear();
-                    GoPayroll();
-                    break;
-                /////////////// case '`':
-                //////////////     BackdoorAccess();
-                /////////////      break;
-                default:
-
-                    break;
-            }
-            Console.WriteLine($"\nEDIT operation done. Current record info:\n{emp}\nPress any key to continue.");
+            Console.WriteLine($"\nEDIT operation done. \nCurrent record info:\n{emp}\nPress any key to continue.");
             Console.ReadKey();
             FromMain = false;
             EditEmployee(emp);
@@ -529,7 +553,7 @@ namespace EmpDB
         // return the employee else null
         private Employee FindEmployeeRecord(out string email)
         {
-            Console.WriteLine("\nENTER the email address of the employee to search: ");
+            Console.Write("\nENTER the email address of the employee to search: ");
             email = Console.ReadLine();
 
             foreach (var emp in employees)
@@ -552,11 +576,20 @@ namespace EmpDB
         // postcondition: a printout of all existing employee records
         private void PrintAllRecords()
         {
+            Console.WriteLine();
             foreach(var emp in employees)
             {
-                Console.WriteLine("\n***********************************");
-                Console.WriteLine(emp);
-                Console.WriteLine($"Earnings: {emp.Earnings():c}");
+                Console.WriteLine("\n*******************************************************");
+                if (emp.GetType().Name == "CommissionEmployee")
+                {
+                    Console.Write("\t      ");
+                    Console.WriteLine(emp);
+                }
+                else
+                {
+                    Console.WriteLine(emp);
+                }
+                Console.WriteLine($"{"Earnings: ",35}{emp.Earnings():c}");
             }
         }
 

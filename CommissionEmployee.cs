@@ -75,8 +75,8 @@ namespace EmpDB
         // return string representation of CommissionEmployee object
         public override string ToString() =>
            $"Commission employee: {base.ToString()}\n" +
-           $"Gross sales: {GrossSales:C}\n" +
-           $"Commission rate: {CommissionRate:F2}";
+           $"{"Gross sales: ",35}{GrossSales:C}\n" +
+           $"{"Commission rate: ",35}{CommissionRate:F2}";
 
         public override string ToStringForSaveFile()
         {
