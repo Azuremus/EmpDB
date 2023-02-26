@@ -146,13 +146,14 @@ namespace EmpDB
         // postcondition: the new employee record is saved
         private void AddNewEmployee()
         {
-            Console.Write("\nEnter first name of employee:");
+            Console.WriteLine("\n************ ADD NEW EMPLOYEE ************");
+            Console.Write("\nEnter first name of employee: ");
             string firstName = Console.ReadLine();
-            Console.Write("Enter last name of employee:");
+            Console.Write("Enter last name of employee: ");
             string lastName = Console.ReadLine();
-            Console.Write("Enter email of employee:");
+            Console.Write("Enter email of employee: ");
             string email = Console.ReadLine();
-            Console.Write("Enter employee's social security number:");
+            Console.Write("Enter employee's social security number: ");
             string socialSecurityNumber = Console.ReadLine();
 
             Console.WriteLine("Select an employee type");
@@ -168,9 +169,9 @@ namespace EmpDB
         ");
 
             char selection = GetUserInputChar();
-            
+
             // process a new hourly employee
-            if (selection == 'H' || selection == 'h')
+            if (char.ToUpper(selection) == 'H')
             {
                 // create a new HourlyEmployee object
                 HourlyEmployee emp = new HourlyEmployee(firstName, lastName, email, socialSecurityNumber, 0, 0);
@@ -181,11 +182,11 @@ namespace EmpDB
                 string hoursWorked = Console.ReadLine();
                 emp.Hours = emp.ValidateDecimal(hoursWorked);
 
-                // add new employee record to the list
-                employees.Add(emp);
+                // Confirm new employee record with user
+                ConfirmAddEmployee(emp);
             }
             // process a new salaried employee
-            else if (selection == 'S' || selection == 's')
+            else if (char.ToUpper(selection) == 'S')
             {
                 // create a new SalariedEmployee object
                 SalariedEmployee emp = new SalariedEmployee(firstName, lastName, email, socialSecurityNumber, 0);
@@ -193,11 +194,11 @@ namespace EmpDB
                 string weeklySalary = Console.ReadLine();
                 emp.WeeklySalary = emp.ValidateDecimal(weeklySalary);
 
-                // add new employee record to the list
-                employees.Add(emp);
+                // Confirm new employee record with user
+                ConfirmAddEmployee(emp);
             }
             // process a new commission employee
-            else if (selection == 'C' || selection == 'c')
+            else if (char.ToUpper(selection) == 'C')
             {
                 // create a new CommissionEmployee object
                 CommissionEmployee emp = new CommissionEmployee(firstName, lastName, email, socialSecurityNumber, 0, 0);
@@ -208,11 +209,11 @@ namespace EmpDB
                 string commissionRate = Console.ReadLine();
                 emp.CommissionRate = emp.ValidateDecimal(commissionRate);
 
-                // add new employee record to the list
-                employees.Add(emp);
+                // Confirm new employee record with user
+                ConfirmAddEmployee(emp);
             }
             // process a new base plus commission employee
-            else if (selection == 'B' || selection == 'b')
+            else if (char.ToUpper(selection) == 'B')
             {
                 // create a new BasePlusCommissionEmployee object
                 BasePlusCommissionEmployee emp = new BasePlusCommissionEmployee(firstName,
@@ -227,14 +228,75 @@ namespace EmpDB
                 string baseSalary = Console.ReadLine();
                 emp.BaseSalary = emp.ValidateDecimal(baseSalary);
 
+                // Confirm new employee record with user
+                ConfirmAddEmployee(emp);
+            }
+        }
+
+        // function: allows the user to confirm a new employee condition
+        // precondition: the client has attempted to add a new employee record
+        //               and they have entered the necessary details for the employee type
+        //
+        // input:  Employee emp
+        // output: none
+        // postcondition: the employee has confirmed or rejected the addition of a new
+        //                employee object
+        //
+        private void ConfirmAddEmployee(Employee emp)
+        {
+            // print and confirm the new employee
+            // record with the user
+            Console.WriteLine(emp);
+            Console.WriteLine("Add this employee record to the database?");
+            Console.Write("[Y]es, [E]dit record, [R]estart");
+
+            char choice = GetUserInputChar();
+
+            // user confirms the new employee record
+            if (char.ToUpper(choice) == 'Y')
+            {
+                Console.WriteLine("Employee successfully added to database!");
 
                 // add new employee record to the list
                 employees.Add(emp);
+
+                // prompt user to add another record
+                Console.Write("Would you like to add another employee record (Y/N)? ");
+                char addAgain = GetUserInputChar();
+
+                if (char.ToUpper(addAgain) == 'Y')
+                {
+                    // clear console and call method to add new employee
+                    Console.Clear();
+                    AddNewEmployee();
+                }
+                else
+                {
+                    Console.WriteLine("Thank you for using our program. Have a nice day!");
+                }
             }
-            // invalid input - no employee type match
+            // user wishes to edit the record
+            else if (char.ToUpper(choice) == 'E')
+            {
+                // temporarily store employee object
+                // so it can be used for lookup
+                employees.Add(emp);
+
+                EditEmployee(emp);
+
+                // confirm new changes with the user
+                Console.WriteLine("Employee successfully added to database!");
+            }
+            // user wishes to start the process over
+            else if (char.ToUpper(choice) == 'R')
+            {
+                // clear console and call method to add new employee
+                Console.Clear();
+                AddNewEmployee();
+            }
             else
             {
-                Console.WriteLine("\nInvalid input. No employee type found!");
+                Console.WriteLine("Not a valid option. Terminating...");
             }
         }
 
