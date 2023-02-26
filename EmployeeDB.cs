@@ -616,6 +616,7 @@ namespace EmpDB
                 if (email == emp.EmailAddress)
                 {
                     Console.WriteLine($"FOUND email address: {emp.EmailAddress}");
+                    Console.WriteLine($"Employee record:\n{emp}");
                     return emp;
                 }
             }

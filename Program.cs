@@ -26,7 +26,7 @@
 // 2023-02-25 - Ryan Enyeart -- Modified AddNewEmployee method to use the ValidateDecimal method.
 // 2023-02-25 - Caleb Ghirmai - Creation of ConfirmAddEmployee method.
 // 2023-02-25 - Caleb Ghirmai - Modified AddNewEmployee method to allow confirmation of new employee record.
-//
+// 2023-02-25 - Caleb Ghirmai - Modified FindEmployeeRecord to print out employee record if found
 //
 using System;
 using System.Collections.Generic;
