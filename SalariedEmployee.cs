@@ -6,7 +6,7 @@ namespace EmpDB
 {
     // Fig. 12.5: SalariedEmployee.cs
     // SalariedEmployee class that extends Employee.
-    public class SalariedEmployee : Employee, IPayable
+    public class SalariedEmployee : Employee
     {
         private decimal weeklySalary;
 
@@ -44,7 +44,7 @@ namespace EmpDB
         // calculates earnings by overriding the abstract method declared in the Employee base class
         public override decimal Earnings() => WeeklySalary;
         
-        public decimal GetPaymentAmount() => Earnings();
+        public new decimal GetPaymentAmount() => Earnings();
        
 
         // return string representation of SalariedEmployee object

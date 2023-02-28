@@ -8,7 +8,7 @@ using EmpDB;
 // Employee hierarchy test app.
 class PayrollSystemTest
 {
-   static void TestMain()
+   public static void TestMain()
    {
       // create derived-class objects
       var salariedEmployee = new SalariedEmployee("John", "Smith","test@test.com",

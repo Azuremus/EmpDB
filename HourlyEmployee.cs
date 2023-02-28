@@ -6,7 +6,7 @@ namespace EmpDB
 {
     // Fig. 12.6: HourlyEmployee.cs
     // HourlyEmployee class that extends Employee.
-    public class HourlyEmployee : Employee, IPayable
+    public class HourlyEmployee : Employee
     {
         private decimal wage; // wage per hour
         private decimal hours; // hours worked for the week
@@ -80,7 +80,7 @@ namespace EmpDB
             }
         }
 
-        public decimal GetPaymentAmount() => Earnings();
+        public new decimal GetPaymentAmount() => Earnings();
         
 
         // return string representation of HourlyEmployee object

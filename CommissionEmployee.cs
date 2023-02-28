@@ -69,7 +69,7 @@ namespace EmpDB
         // calculate earnings; override abstract method Earnings in Employee
         public override decimal Earnings() => CommissionRate * GrossSales;
 
-        public decimal GetPaymentAmount() => Earnings();
+        public new decimal GetPaymentAmount() => Earnings();
         
 
         // return string representation of CommissionEmployee object

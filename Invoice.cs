@@ -1,20 +1,23 @@
 ﻿// * (C) Copyright 1992-2017 by Deitel & Associates, Inc. and    
 // * Pearson Education, Inc. All Rights Reserved.                
 using System;
+using System.Net.Mail;
 
 public class Invoice : IPayable
 {
     // Fig. 12.12: Invoice.cs
     // Invoice class implements IPayable.
+    public string InvoiceNumber { get; }
     public string PartNumber { get; }
     public string PartDescription { get; }
     private int quantity;
     private decimal pricePerItem;
 
     // four-parameter constructor
-    public Invoice(string partNumber, string partDescription, int quantity,
+    public Invoice(string invoiceNumber, string partNumber, string partDescription, int quantity,
        decimal pricePerItem)
     {
+        InvoiceNumber = invoiceNumber;
         PartNumber = partNumber;
         PartDescription = partDescription;
         Quantity = quantity; // validate quantity 
@@ -41,8 +44,6 @@ public class Invoice : IPayable
             {
                 quantity = value;
             }
-
-
         }
     }
 
@@ -57,18 +58,33 @@ public class Invoice : IPayable
         {
             if (value < 0) // validation
             {
-                throw new ArgumentOutOfRangeException(nameof(value),
-                   value, $"{nameof(PricePerItem)} must be >= 0");
+                Console.WriteLine($"Price per item for {PartDescription} must be >=0");
+                Console.Write($"ENTER valid unit price for {PartDescription}: ");
+                string price = Console.ReadLine();
+                PricePerItem = ValidateDecimal(price);
             }
-
-            pricePerItem = value;
+            else
+            {
+                pricePerItem = value;
+            }
         }
     }
 
     // return string representation of Invoice object
     public override string ToString() =>
-       $"invoice:\npart number: {PartNumber} ({PartDescription})\n" +
-       $"quantity: {Quantity}\nprice per item: {PricePerItem:C}";
+       $"{"Invoice: ",22}{InvoiceNumber}\n{"Part number: ",35}{PartNumber} ({PartDescription})\n" +
+       $"{"Quantity: ",35}{Quantity}\n{"Price per item: ",35}{PricePerItem:C}";
+
+    public string ToStringForSaveFile()
+    {
+        string str = GetType() + "\n";
+        str += $"{InvoiceNumber}\n";
+        str += $"{PartNumber}\n";
+        str += $"{PartDescription}\n";
+        str += $"{Quantity}\n";
+        str += $"{PricePerItem}";
+        return str;
+    }
 
     // method required to carry out contract with interface IPayable
     public decimal GetPaymentAmount() => Quantity * PricePerItem;
@@ -77,9 +93,19 @@ public class Invoice : IPayable
     {
         if (!(int.TryParse(number, out int result)))
         {
-            Console.Write("Please ENTER decimal values ONLY: ");
+            Console.Write("Please ENTER integer values ONLY: ");
             number = Console.ReadLine();
             result = ValidateInteger(number);
+        }
+        return result;
+    }
+    public decimal ValidateDecimal(string number)
+    {
+        if (!(decimal.TryParse(number, out decimal result)))
+        {
+            Console.Write("Please ENTER decimal values ONLY: ");
+            number = Console.ReadLine();
+            result = ValidateDecimal(number);
         }
         return result;
     }

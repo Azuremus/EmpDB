@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
+using System.Linq;
 
 namespace EmpDB
 {
@@ -10,16 +12,20 @@ namespace EmpDB
         public const bool _DEBUG_TEST_ = true;
 
         // storage container while the payroll app is running
-        private List<Employee> employees = new List<Employee>();
+        private List<IPayable> payables = new List<IPayable>();
 
-        // input file to read employees fro
-        private const string EMPLOYEE_DATA_INPUTFILE = "EMPLOYEE_DATA_INPUTFILE.txt";
+        // input file to read payables from
+        private const string EMPLOYEE_DATA_INPUTFILE = "_EMPLOYEE_SAVE_FILE_.txt";
+        //"EMPLOYEE_DATA_INPUTFILE.txt";
 
 
         public EmployeeDB()
         {
-            if (_DEBUG_TEST_) TestMain();
-            /*            ReadDataFromInputFile();*/
+            if (_DEBUG_TEST_)
+            {
+                TestMain();
+                //ReadDataFromInputFile();
+            }
         }
 
         // function: displays the main menu of options for
@@ -38,11 +44,16 @@ namespace EmpDB
         [E]dit an existing employee record
         [D]elete an employee record
         [F]ind an employee in the database
-        [P]rint out all employee records
+        [S]ubmit new invoice
+        [C]ancel invoice
+        [V]iew invoice
+        [P]rocess payroll 
         [Q]uit the app after saving
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Please ENTER your selection: ");
         }
+        // [P]rint out all employee records => [P]rocess payroll
+
 
         // function:main user interface for the paroll app
         // preconditions: The program has successfully executed and is waiting for user input
@@ -52,7 +63,7 @@ namespace EmpDB
         internal void GoPayroll()
         {
             Console.Clear();
-            string email = string.Empty;
+            string primaryKey = string.Empty;
 
             // displays the main menu until either a valid option is selected
             // or the user exits the program.
@@ -82,7 +93,19 @@ namespace EmpDB
                         break;
                     case 'F':
                     case 'f':
-                        FindEmployeeRecord(out email);
+                        FindEmployeeRecord(out primaryKey);
+                        break;
+                    case 'S':
+                    case 's':
+                        SubmitNewInvoice();
+                        break;
+                    case 'C':
+                    case 'c':
+                        CancelInvoice();
+                        break;
+                    case 'V':
+                    case 'v':
+                        ViewInvoice(out primaryKey);
                         break;
                     case 'P':
                     case 'p':
@@ -99,7 +122,173 @@ namespace EmpDB
             }
         }
 
-        // function: allows teh user to delete a current employee's record
+        // function:
+        // preconditions:
+        // input:
+        // output
+        //postconditions:
+        private void SubmitNewInvoice()
+        {
+            Console.WriteLine("\n************ SUBMIT NEW INVOICE ************");
+            bool invoiceDuplicate = true;
+            string invoiceNumber = string.Empty;
+            List<Invoice> temp = new List<Invoice>();
+            foreach (IPayable payable in payables)
+            {
+                if (payable.GetType().Name == "Invoice")
+                {
+                    temp.Add((Invoice)payable);
+                }
+            }
+            while (invoiceDuplicate)
+            {
+                Console.Write("\nEnter the invoice number: ");
+                invoiceNumber = Console.ReadLine();
+                foreach (Invoice item in temp)
+                {
+                    if (item.InvoiceNumber == invoiceNumber)
+                    {
+                        Console.WriteLine("ERROR! That invoice number aleady exists!" +
+                            "\nPlease check current records.");
+                        invoiceDuplicate = true;
+                    }
+                    else
+                    {
+                        invoiceDuplicate = false;
+                    }
+                }
+            }
+            Console.Write("Enter the part number: ");
+            string partNumber = Console.ReadLine();
+            Console.Write("Enter the part description: ");
+            string partDescription = Console.ReadLine();
+            Invoice invoice = new Invoice(invoiceNumber, partNumber, partDescription, 0, 0);
+            Console.Write("Enter the quantity ordered: ");
+            string quantity = Console.ReadLine();
+            invoice.Quantity = invoice.ValidateInteger(quantity);
+            Console.Write("Enter the unit price: ");
+            string unitPrice = Console.ReadLine();
+            invoice.PricePerItem = invoice.ValidateDecimal(unitPrice);
+            ConfirmNewInvoice(invoice);
+        }
+
+        // function:
+        // preconditions:
+        // input:
+        // output
+        //postconditions:
+        private void ConfirmNewInvoice(Invoice invoice)
+        {
+            // print and confirm the new invoice
+            // record with the user
+            Console.WriteLine(invoice);
+            Console.WriteLine("Submit this invoice to the database?");
+            Console.Write("[Y]es, [C]ancel, [R]estart");
+
+            char choice = GetUserInputChar();
+
+            // user confirms the new invoice
+            switch (choice)
+            {
+                case 'Y':
+                case 'y':
+                    Console.WriteLine("Invoice successfully added to database!");
+                    payables.Add(invoice);
+                    GoPayroll();
+                    break;
+                case 'C':
+                case 'c':
+                    // user wishes to cancel submission
+                    GoPayroll();
+                    break;
+                case 'R':
+                case 'r':
+                    // clear console and call method to add new employee
+                    Console.Clear();
+                    Console.WriteLine("Previous entry: \n" + invoice.ToString());
+                    SubmitNewInvoice();
+                    break;
+                default:
+                    Console.WriteLine("\nPlese ENTER a valid choice (Y/C/R): ");
+                    ConfirmNewInvoice(invoice);
+                    break;
+            }
+
+        }
+
+        // function:
+        // preconditions:
+        // input:
+        // output
+        //postconditions:
+        private void CancelInvoice()
+        {
+            string invoiceNumber = string.Empty;
+            Invoice invoice = ViewInvoice(out invoiceNumber);
+            Console.WriteLine($"{invoice}");
+            bool validChoice = false;
+            if (invoice != null)
+            {
+                while (!(validChoice))
+                {
+                    Console.WriteLine("Are you sure you want to cancel this invoice? [Y]es/[N]o ");
+                    char choice = GetUserInputChar();
+                    switch (choice)
+                    {
+                        case 'Y':
+                        case 'y':
+                            validChoice = true;
+                            payables.Remove(invoice);
+                            Console.WriteLine($"\nSystem has deleted invoice: {invoiceNumber}");
+                            break;
+                        case 'N':
+                        case 'n':
+                            Console.Clear();
+                            GoPayroll();
+                            validChoice = true;
+                            break;
+                        default:
+                            Console.Write("\nOnly ENTER 'Y' for Yes, or 'N' for No: ");
+                            break;
+                    }
+                }
+            }
+        }
+
+        // function:
+        // preconditions:
+        // input:
+        // output
+        //postconditions:
+        private Invoice ViewInvoice(out string primaryKey)
+        {
+            
+            Console.Write("\nENTER the invoice number you would like to view: ");
+            primaryKey = Console.ReadLine();
+            List<Invoice> temp = new List<Invoice>();
+            foreach (IPayable payable in payables)
+            {
+                if (payable.GetType().Name == "Invoice")
+                {
+                    temp.Add((Invoice)payable);
+                }
+            }
+            foreach (Invoice invoice in temp)
+            {
+                if (primaryKey == invoice.InvoiceNumber)
+                {
+                    Console.WriteLine($"\n\nFOUND Invoice: {invoice.InvoiceNumber}\n");
+                    Console.WriteLine(invoice);
+                    
+                    return invoice;
+                }
+            }
+            // no matching email address
+            Console.WriteLine($"{primaryKey} NOT FOUND!");
+            return null;
+        }
+
+        // function: allows the user to delete a current employee's record
         // precondition: the employee must exist
         // input: either 'y' for yes or 'n' for no
         // output: Confirmation message that employee record is deleted
@@ -121,7 +310,7 @@ namespace EmpDB
                         case 'Y':
                         case 'y':
                             validChoice = true;
-                            employees.Remove(emp);
+                            payables.Remove(emp);
                             Console.WriteLine($"\nSystem has deleted the record associated with Social Securty Number: {email}");
                             break;
                         case 'N':
@@ -146,6 +335,7 @@ namespace EmpDB
         // postcondition: the new employee record is saved
         private void AddNewEmployee()
         {
+            bool validChoice = false;
             Console.WriteLine("\n************ ADD NEW EMPLOYEE ************");
             Console.Write("\nEnter first name of employee: ");
             string firstName = Console.ReadLine();
@@ -155,9 +345,10 @@ namespace EmpDB
             string email = Console.ReadLine();
             Console.Write("Enter employee's social security number: ");
             string socialSecurityNumber = Console.ReadLine();
-
-            Console.WriteLine("Select an employee type");
-            Console.WriteLine(@"
+            while (validChoice == false)
+            {
+                Console.WriteLine("Select an employee type");
+                Console.WriteLine(@"
         ********************************************************
         ***************Employee Type***************
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,68 +359,78 @@ namespace EmpDB
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ");
 
-            char selection = GetUserInputChar();
+                char selection = GetUserInputChar();
 
-            // process a new hourly employee
-            if (char.ToUpper(selection) == 'H')
-            {
-                // create a new HourlyEmployee object
-                HourlyEmployee emp = new HourlyEmployee(firstName, lastName, email, socialSecurityNumber, 0, 0);
-                Console.Write("\nEnter the employee's wage per hour: ");
-                string wage = Console.ReadLine();
-                emp.Wage = emp.ValidateDecimal(wage);
-                Console.Write("Enter employee's hours worked for the week: ");
-                string hoursWorked = Console.ReadLine();
-                emp.Hours = emp.ValidateDecimal(hoursWorked);
+                // process a new hourly employee
+                if (char.ToUpper(selection) == 'H')
+                {
+                    validChoice = true;
+                    // create a new HourlyEmployee object
+                    HourlyEmployee emp = new HourlyEmployee(firstName, lastName, email, socialSecurityNumber, 0, 0);
+                    Console.Write("\nEnter the employee's wage per hour: ");
+                    string wage = Console.ReadLine();
+                    emp.Wage = emp.ValidateDecimal(wage);
+                    Console.Write("Enter employee's hours worked for the week: ");
+                    string hoursWorked = Console.ReadLine();
+                    emp.Hours = emp.ValidateDecimal(hoursWorked);
 
-                // Confirm new employee record with user
-                ConfirmAddEmployee(emp);
-            }
-            // process a new salaried employee
-            else if (char.ToUpper(selection) == 'S')
-            {
-                // create a new SalariedEmployee object
-                SalariedEmployee emp = new SalariedEmployee(firstName, lastName, email, socialSecurityNumber, 0);
-                Console.Write("\nEnter the employee's weekly salary: ");
-                string weeklySalary = Console.ReadLine();
-                emp.WeeklySalary = emp.ValidateDecimal(weeklySalary);
+                    // Confirm new employee record with user
+                    ConfirmAddEmployee(emp);
+                }
+                // process a new salaried employee
+                else if (char.ToUpper(selection) == 'S')
+                {
+                    validChoice = true;
+                    // create a new SalariedEmployee object
+                    SalariedEmployee emp = new SalariedEmployee(firstName, lastName, email, socialSecurityNumber, 0);
+                    Console.Write("\nEnter the employee's weekly salary: ");
+                    string weeklySalary = Console.ReadLine();
+                    emp.WeeklySalary = emp.ValidateDecimal(weeklySalary);
 
-                // Confirm new employee record with user
-                ConfirmAddEmployee(emp);
-            }
-            // process a new commission employee
-            else if (char.ToUpper(selection) == 'C')
-            {
-                // create a new CommissionEmployee object
-                CommissionEmployee emp = new CommissionEmployee(firstName, lastName, email, socialSecurityNumber, 0, 0);
-                Console.Write("\nEnter the employee's gross sales: ");
-                string grossSales = Console.ReadLine();
-                emp.GrossSales = emp.ValidateDecimal(grossSales);
-                Console.Write("\nEnter the employee's commission rate: ");
-                string commissionRate = Console.ReadLine();
-                emp.CommissionRate = emp.ValidateDecimal(commissionRate);
+                    // Confirm new employee record with user
+                    ConfirmAddEmployee(emp);
+                }
+                // process a new commission employee
+                else if (char.ToUpper(selection) == 'C')
+                {
+                    validChoice = true;
+                    // create a new CommissionEmployee object
+                    CommissionEmployee emp = new CommissionEmployee(firstName, lastName, email, socialSecurityNumber, 0, 0);
+                    Console.Write("\nEnter the employee's gross sales: ");
+                    string grossSales = Console.ReadLine();
+                    emp.GrossSales = emp.ValidateDecimal(grossSales);
+                    Console.Write("\nEnter the employee's commission rate: ");
+                    string commissionRate = Console.ReadLine();
+                    emp.CommissionRate = emp.ValidateDecimal(commissionRate);
 
-                // Confirm new employee record with user
-                ConfirmAddEmployee(emp);
-            }
-            // process a new base plus commission employee
-            else if (char.ToUpper(selection) == 'B')
-            {
-                // create a new BasePlusCommissionEmployee object
-                BasePlusCommissionEmployee emp = new BasePlusCommissionEmployee(firstName,
-                    lastName, email, socialSecurityNumber, 0, 0, 0);
-                Console.Write("\nEnter the employee's gross sales: ");
-                string grossSales = Console.ReadLine();
-                emp.GrossSales = emp.ValidateDecimal(grossSales);
-                Console.Write("Enter the employee's commission rate: ");
-                string commissionRate = Console.ReadLine();
-                emp.CommissionRate = emp.ValidateDecimal(commissionRate);
-                Console.Write("Enter the employee's base salary: ");
-                string baseSalary = Console.ReadLine();
-                emp.BaseSalary = emp.ValidateDecimal(baseSalary);
+                    // Confirm new employee record with user
+                    ConfirmAddEmployee(emp);
+                }
+                // process a new base plus commission employee
+                else if (char.ToUpper(selection) == 'B')
+                {
+                    validChoice = true;
+                    // create a new BasePlusCommissionEmployee object
+                    BasePlusCommissionEmployee emp = new BasePlusCommissionEmployee(firstName,
+                        lastName, email, socialSecurityNumber, 0, 0, 0);
+                    Console.Write("\nEnter the employee's gross sales: ");
+                    string grossSales = Console.ReadLine();
+                    emp.GrossSales = emp.ValidateDecimal(grossSales);
+                    Console.Write("Enter the employee's commission rate: ");
+                    string commissionRate = Console.ReadLine();
+                    emp.CommissionRate = emp.ValidateDecimal(commissionRate);
+                    Console.Write("Enter the employee's base salary: ");
+                    string baseSalary = Console.ReadLine();
+                    emp.BaseSalary = emp.ValidateDecimal(baseSalary);
 
-                // Confirm new employee record with user
-                ConfirmAddEmployee(emp);
+                    // Confirm new employee record with user
+                    ConfirmAddEmployee(emp);
+                }
+                else
+                {
+                    Console.WriteLine("\nThat is an invalid option!\nPlease ENTER one of the following:" +
+                        "\n\t[H]ourly\n\t[S]alaried\n\t[C]ommission\n\t[B]ase plus commission");
+                }
             }
         }
 
@@ -258,7 +459,7 @@ namespace EmpDB
                 Console.WriteLine("Employee successfully added to database!");
 
                 // add new employee record to the list
-                employees.Add(emp);
+                payables.Add(emp);
 
                 // prompt user to add another record
                 Console.Write("Would you like to add another employee record (Y/N)? ");
@@ -280,7 +481,7 @@ namespace EmpDB
             {
                 // temporarily store employee object
                 // so it can be used for lookup
-                employees.Add(emp);
+                payables.Add(emp);
 
                 EditEmployee(emp);
 
@@ -364,16 +565,17 @@ namespace EmpDB
                             break;
                         // these cases notify user that they chose an invalid option for
                         // a Salaried employee
-                        case 'W':
-                        case 'w':
-                        case 'H':
-                        case 'h':
-                        case 'G':
-                        case 'g':
-                        case 'C':
-                        case 'c':
-                        case 'B':
-                        case 'b':
+                       // case 'W':
+                       // case 'w':
+                       // case 'H':
+                       // case 'h':
+                       // case 'G':
+                       // case 'g':
+                       // case 'C':
+                       // case 'c':
+                       // case 'B':
+                       // case 'b':
+                        default:
                             Console.WriteLine(@"
         ***********************************************
         ***********************************************
@@ -410,14 +612,15 @@ namespace EmpDB
                             break;
                         // these cases notify user that they chose an invalid option for
                         // a Salaried employee
-                        case 'S':
-                        case 's':
-                        case 'G':
-                        case 'g':
-                        case 'C':
-                        case 'c':
-                        case 'B':
-                        case 'b':
+                        //case 'S':
+                        //case 's':
+                        //case 'G':
+                        //case 'g':
+                        //case 'C':
+                        //case 'c':
+                        //case 'B':
+                        //case 'b':
+                        default:
                             Console.WriteLine(@"
         ***********************************************
         ***********************************************
@@ -454,14 +657,7 @@ namespace EmpDB
                             break;
                         // these cases notify user that they chose an invalid option for
                         // a Salaried employee
-                        case 'S':
-                        case 's':
-                        case 'W':
-                        case 'w':
-                        case 'H':
-                        case 'h':
-                        case 'B':
-                        case 'b':
+                        default:
                             Console.WriteLine(@"
         ***********************************************
         ***********************************************
@@ -491,16 +687,7 @@ namespace EmpDB
                             break;
                         // these cases notify user that they chose an invalid option for
                         // a Salaried employee
-                        case 'S':
-                        case 's':
-                        case 'W':
-                        case 'w':
-                        case 'H':
-                        case 'h':
-                        case 'G':
-                        case 'g':
-                        case 'C':
-                        case 'c':
+                        default:
                             Console.WriteLine(@"
         ***********************************************
         ***********************************************
@@ -543,8 +730,7 @@ namespace EmpDB
                     //////////////     BackdoorAccess();
                     /////////////      break;
                     default:
-                        Console.WriteLine("\n\n\t\t***********************************");
-                        Console.WriteLine("\n\t\tInvalid selection! \n\t\tPlease ENTER a valid selection for:\n ");
+                        Console.WriteLine($"Current record for: \n{emp}");
                         EditEmployee(emp);
                         break;
                 }
@@ -603,15 +789,22 @@ namespace EmpDB
 
 
 
-        // searches the list of employees for an employee
+        // searches the list of payables for an employee
         // with a matching Email address. If found,
         // return the employee else null
         private Employee FindEmployeeRecord(out string email)
         {
             Console.Write("\nENTER the email address of the employee to search: ");
             email = Console.ReadLine();
-
-            foreach (var emp in employees)
+            List<Employee> temp = new List<Employee>();
+            foreach (IPayable payable in payables)
+            {
+                if (payable.GetType().Name != "Invoice")
+                {
+                    temp.Add((Employee) payable);
+                }
+            }
+            foreach (Employee emp in temp)
             {
                 if (email == emp.EmailAddress)
                 {
@@ -632,21 +825,45 @@ namespace EmpDB
         // postcondition: a printout of all existing employee records
         private void PrintAllRecords()
         {
+            decimal totalPay = 0;
+            decimal totalInvoice = 0;
             Console.WriteLine();
-            foreach (var emp in employees)
+            foreach (IPayable payable in payables)
             {
+
+                // Attempting to format CommissionEmployee type name to 35 spaces like the rest of the classes
+                // caused a large gap between "Base-salaried" and "Commission employ" when printing
+                // This allows the CommissionEmployee type to be displayed as if it were formatted for 35 spaces.
                 Console.WriteLine("\n*******************************************************");
-                if (emp.GetType().Name == "CommissionEmployee")
+                if (payable.GetType().Name == "CommissionEmployee")
                 {
                     Console.Write("\t      ");
-                    Console.WriteLine(emp);
+                    Console.WriteLine(payable);
                 }
                 else
                 {
-                    Console.WriteLine(emp);
+                    Console.WriteLine(payable);
                 }
-                Console.WriteLine($"{"Earnings: ",35}{emp.Earnings():c}");
+
+                Console.WriteLine($"{"Amount due: ",35}{payable.GetPaymentAmount():c}");
+                switch (payable.GetType().Name)
+                {
+                    case "Invoice":
+                        totalInvoice += payable.GetPaymentAmount();
+                        break;
+                    default:
+                        totalPay += payable.GetPaymentAmount();
+                        break;
+                }
             }
+
+            Console.WriteLine("\n*******************************************************");
+            Console.WriteLine("\n\n\t******************************************");
+            Console.WriteLine($"\t|   Payroll amount due: {totalPay,15:c}  | ");
+            Console.WriteLine($"\t|   Invoice amount due: {totalInvoice,15:c}  | ");
+            Console.WriteLine($"\t|     Total amount due: {totalInvoice + totalPay,15:c}  | ");
+            Console.WriteLine("\t|                                        |");
+            Console.WriteLine("\t******************************************");
         }
 
         // function: reads the input file of employee records and stores them in a list
@@ -660,61 +877,75 @@ namespace EmpDB
             StreamReader inFile = new StreamReader(EMPLOYEE_DATA_INPUTFILE);
 
             // 2 - use the file
-            string employeeType = string.Empty;
-            while ((employeeType = inFile.ReadLine()) != null)
+            string payableType = string.Empty;
+            while ((payableType = inFile.ReadLine()) != null)
             {
-                // gather the essential information from the employee
-                string firstName = inFile.ReadLine();
-                string lastName = inFile.ReadLine();
-                string emailAdress = inFile.ReadLine();
-                string socialSecurityNumber = inFile.ReadLine();
-
-                if (employeeType == "HourlyEmployee")
+                if (payableType != "Invoice")
                 {
-                    // get wage and hours worked
-                    decimal hourlyWage = decimal.Parse(inFile.ReadLine());
-                    decimal hoursWorked = decimal.Parse(inFile.ReadLine());
+                    // gather the essential information from the employee
+                    string firstName = inFile.ReadLine();
+                    string lastName = inFile.ReadLine();
+                    string emailAdress = inFile.ReadLine();
+                    string socialSecurityNumber = inFile.ReadLine();
 
-                    // create HourlyEmployee object and store into list
-                    HourlyEmployee employee = new HourlyEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
-                        hourlyWage, hoursWorked);
-                    employees.Add(employee);
+                    if (payableType == "HourlyEmployee")
+                    {
+                        // get wage and hours worked
+                        decimal hourlyWage = decimal.Parse(inFile.ReadLine());
+                        decimal hoursWorked = decimal.Parse(inFile.ReadLine());
+
+                        // create HourlyEmployee object and store into list
+                        HourlyEmployee employee = new HourlyEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
+                            hourlyWage, hoursWorked);
+                        payables.Add(employee);
+                    }
+                    else if (payableType == "SalariedEmployee")
+                    {
+                        // get weekly salary
+                        decimal weeklySalary = decimal.Parse(inFile.ReadLine());
+
+                        // create SalariedEmployee object and store into list
+                        SalariedEmployee employee = new SalariedEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
+                            weeklySalary);
+                        payables.Add(employee);
+                    }
+                    else if (payableType == "CommissionEmployee")
+                    {
+                        // get gross weekly sales and commission rate
+                        decimal grossSales = decimal.Parse(inFile.ReadLine());
+                        decimal commissionRate = decimal.Parse(inFile.ReadLine());
+
+                        // create CommissionEmployee object and store into list
+                        CommissionEmployee employee = new CommissionEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
+                            grossSales, commissionRate);
+                        payables.Add(employee);
+                    }
+
+                    else if (payableType == "BasePlusCommissionEmployee")
+                    {
+                        // get gross weekly sales, commission rate, and base salary
+                        decimal grossSales = decimal.Parse(inFile.ReadLine());
+                        decimal commissionRate = decimal.Parse(inFile.ReadLine());
+                        decimal baseSalary = decimal.Parse(inFile.ReadLine());
+
+                        // create BasePlusCommissionEmployee object and store into list
+                        BasePlusCommissionEmployee employee = new BasePlusCommissionEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
+                            grossSales, commissionRate, baseSalary);
+                        payables.Add(employee);
+                    }
                 }
-                else if (employeeType == "SalariedEmployee")
+                else if (payableType == "Invoice")
                 {
-                    // get weekly salary
-                    decimal weeklySalary = decimal.Parse(inFile.ReadLine());
-
-                    // create SalariedEmployee object and store into list
-                    SalariedEmployee employee = new SalariedEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
-                        weeklySalary);
-                    employees.Add(employee);
-                }
-                else if (employeeType == "CommissionEmployee")
-                {
-                    // get gross weekly sales and commission rate
-                    decimal grossSales = decimal.Parse(inFile.ReadLine());
-                    decimal commissionRate = decimal.Parse(inFile.ReadLine());
-
-                    // create CommissionEmployee object and store into list
-                    CommissionEmployee employee = new CommissionEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
-                        grossSales, commissionRate);
-                    employees.Add(employee);
-                }
-
-                else if (employeeType == "BasePlusCommissionEmployee")
-                {
-                    // get gross weekly sales, commission rate, and base salary
-                    decimal grossSales = decimal.Parse(inFile.ReadLine());
-                    decimal commissionRate = decimal.Parse(inFile.ReadLine());
-                    decimal baseSalary = decimal.Parse(inFile.ReadLine());
-
-                    // create BasePlusCommissionEmployee object and store into list
-                    BasePlusCommissionEmployee employee = new BasePlusCommissionEmployee(firstName, lastName, emailAdress, socialSecurityNumber,
-                        grossSales, commissionRate, baseSalary);
-                    employees.Add(employee);
+                    string invoiceNumber = inFile.ReadLine();
+                    string partNumber = inFile.ReadLine();
+                    string partDescription = inFile.ReadLine();
+                    int quantity = int.Parse(inFile.ReadLine());
+                    decimal pricePerItem = decimal.Parse(inFile.ReadLine());
+                    Invoice invoice = new Invoice(invoiceNumber, partNumber, partDescription, quantity, pricePerItem);
+                    payables.Add(invoice);
                 }
             }
+
             // 3 - Close the resource - once, when all reading is done
             inFile.Close();
         }
@@ -727,11 +958,11 @@ namespace EmpDB
 
             // 2 - use the object
             Console.WriteLine("\n***** Current contents of Employee Database *****");
-            foreach (Employee stu in employees)
+            foreach (/*Employee emp*/ IPayable item in payables)
             {
                 // for now, echo the output to the shell for testing
-                Console.WriteLine(stu.ToStringForSaveFile());
-                saveFile.WriteLine(stu.ToStringForSaveFile());
+                Console.WriteLine(item.ToStringForSaveFile());
+                saveFile.WriteLine(item.ToStringForSaveFile());
             }
 
             // 3 - close the file object
@@ -741,27 +972,28 @@ namespace EmpDB
 
         public void TestMain()
         {
-            // Read employees from input file
-            ReadDataFromInputFile();
-            /*            // make 4 employee objects
-                        Employee emp1 = new SalariedEmployee("Albert:", "Albertson", "aalberston@job.com", "111111111", 3500.00m);
-                        Employee emp2 = new HourlyEmployee("Bonnie", "Bosch", "bbosch@job.com", "222222222", 15.45m, 40.00m);
-                        Employee emp3 = new CommissionEmployee("Charlie", "Cook", "ccook@job.com", "333333333", 7536.45m, 0.07m);
-                        Employee emp4 = new BasePlusCommissionEmployee("David", "Derelict", "dderelict@job.com", "444444444", 50097.05m, 0.05m, 3000m);
+            // Read payables from input file
+            //    ReadDataFromInputFile();
+            // make 4 employee objects
+            Employee emp1 = new SalariedEmployee("Albert:", "Albertson", "aalberston@job.com", "111111111", 3500.00m);
+            Employee emp2 = new HourlyEmployee("Bonnie", "Bosch", "bbosch@job.com", "222222222", 15.45m, 40.00m);
+            Employee emp3 = new CommissionEmployee("Charlie", "Cook", "ccook@job.com", "333333333", 7536.45m, 0.07m);
+            Employee emp4 = new BasePlusCommissionEmployee("David", "Derelict", "dderelict@job.com", "444444444", 50097.05m, 0.05m, 3000m);
 
 
-                        // add the 4 objects to the list
-                        employees.Add(emp1);
-                        employees.Add(emp2);
-                        employees.Add(emp3);
-                        employees.Add(emp4);
+            // add the 4 objects to the list
+            payables.Add(emp1);
+            payables.Add(emp2);
+            payables.Add(emp3);
+            payables.Add(emp4);
 
-                        // make an anonymous object and put it in list
-                        employees.Add(new SalariedEmployee("Edgar", "Evengard", "eevengard@job.com", "555555555", 1300m));
-                        employees.Add(new HourlyEmployee("Fred", "Flinstone", "fflinstone@job.com", "666666666", 17.35m, 50m));
-                        employees.Add(new CommissionEmployee("Gina", "Gladstone", "ggladstone@job.com", "777777777", 7500m, 0.08m));
-                        employees.Add(new BasePlusCommissionEmployee("Howard", "Henderson", "hhenderson@job.com", "888888888", 7600m, .07m, 3400m));*/
-
+            // make an anonymous object and put it in list
+            payables.Add(new SalariedEmployee("Edgar", "Evengard", "eevengard@job.com", "555555555", 1300m));
+            payables.Add(new HourlyEmployee("Fred", "Flinstone", "fflinstone@job.com", "666666666", 17.35m, 50m));
+            payables.Add(new Invoice("000597", "01234", "seat", 2, 375.00M));
+            payables.Add(new CommissionEmployee("Gina", "Gladstone", "ggladstone@job.com", "777777777", 7500m, 0.08m));
+            payables.Add(new BasePlusCommissionEmployee("Howard", "Henderson", "hhenderson@job.com", "888888888", 7600m, .07m, 3400m));
+            payables.Add(new Invoice("000703", "56789", "tire", 4, 79.95M));
 
             //Console.WriteLine(stu1);
             //Console.WriteLine(stu2);
