@@ -1,0 +1,258 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20230228192852
+Username: DESKTOP-14AGFC5\Caleb
+RunAs User: DESKTOP-14AGFC5\Caleb
+Configuration Name: 
+Machine: DESKTOP-14AGFC5 (Microsoft Windows NT 10.0.19045.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command & { Import-Module 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Microsoft.VisualStudio.DevShell.dll'; Enter-VsDevShell -SetDefaultWindowTitle -InstallPath 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise' -StartInPath 'E:\EmpDB\EmpDB' }
+Process ID: 16368
+PSVersion: 5.1.19041.2364
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.19041.2364
+BuildVersion: 10.0.19041.2364
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is .\TEST-FILE.txt
+PS E:\EmpDB\EmpDB> .\bin\Debug\EmpDB.exe
+        Please ENTER your selection: p
+
+*******************************************************
+                Salaried employee: Albert: Albertson
+                    Email address: aalberston@job.com
+           Social Security Number: 111111111
+                    Weekly salary: $3,500.00
+                       Amount due: $3,500.00
+
+*******************************************************
+                  Hourly employee: Bonnie Bosch
+                    Email address: bbosch@job.com
+           Social Security Number: 222222222
+                      Hourly wage: $15.45
+                     Hours worked: 40.00
+                       Amount due: $618.00
+
+*******************************************************
+              Commission employee: Charlie Cook
+                    Email address: ccook@job.com
+           Social Security Number: 333333333
+                      Gross sales: $7,536.45
+                  Commission rate: 0.07
+                       Amount due: $527.55
+
+*******************************************************
+Base-salaried Commission employee: David Derelict
+                    Email address: dderelict@job.com
+           Social Security Number: 444444444
+                      Gross sales: $50,097.05
+                  Commission rate: 0.05
+                      Base salary: $3,000.00
+                       Amount due: $5,504.85
+
+*******************************************************
+                Salaried employee: Edgar Evengard
+                    Email address: eevengard@job.com
+           Social Security Number: 555555555
+                    Weekly salary: $1,300.00
+                       Amount due: $1,300.00
+
+*******************************************************
+                  Hourly employee: Fred Flinstone
+                    Email address: fflinstone@job.com
+           Social Security Number: 666666666
+                      Hourly wage: $17.35
+                     Hours worked: 50.00
+                       Amount due: $954.25
+
+*******************************************************
+             Invoice: 000597
+                      Part number: 01234 (seat)
+                         Quantity: 2
+                   Price per item: $375.00
+                       Amount due: $750.00
+
+*******************************************************
+              Commission employee: Gina Gladstone
+                    Email address: ggladstone@job.com
+           Social Security Number: 777777777
+                      Gross sales: $7,500.00
+                  Commission rate: 0.08
+                       Amount due: $600.00
+
+*******************************************************
+Base-salaried Commission employee: Howard Henderson
+                    Email address: hhenderson@job.com
+           Social Security Number: 888888888
+                      Gross sales: $7,600.00
+                  Commission rate: 0.07
+                      Base salary: $3,400.00
+                       Amount due: $3,932.00
+
+*******************************************************
+             Invoice: 000703
+                      Part number: 56789 (tire)
+                         Quantity: 4
+                   Price per item: $79.95
+                       Amount due: $319.80
+
+*******************************************************
+                  Hourly employee: Pablo Cincera
+                    Email address: pcincera@uw.edu
+           Social Security Number: 333-222-1111
+                      Hourly wage: $29.00
+                     Hours worked: 42.00
+                       Amount due: $1,247.00
+
+*******************************************************
+              Commission employee: Jonathon Roy
+                    Email address: jroy@uw.edu
+           Social Security Number: 555-444-3333
+                      Gross sales: $449.60
+                  Commission rate: 0.63
+                       Amount due: $283.25
+
+*******************************************************
+Base-salaried Commission employee: Tony Jenkins
+                    Email address: tjenkins@uw.edu
+           Social Security Number: 999-888-7777
+                      Gross sales: $1,041.44
+                  Commission rate: 0.50
+                      Base salary: $60,000.00
+                       Amount due: $60,520.72
+
+*******************************************************
+             Invoice: 123
+                      Part number: 50083 (Light Bulb)
+                         Quantity: 2
+                   Price per item: $8.93
+                       Amount due: $17.86
+
+*******************************************************
+
+
+        ******************************************
+        |   Payroll amount due:      $78,987.62  |
+        |   Invoice amount due:       $1,087.66  |
+        |     Total amount due:      $80,075.28  |
+        |                                        |
+        ******************************************
+
+        ********************************************************
+        ***************EMPLOYEE DATABASE MAIN MENU***************
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        [A]dd new employee record
+        [E]dit an existing employee record
+        [D]elete an employee record
+        [F]ind an employee in the database
+        [S]ubmit new invoice
+        [C]ancel invoice
+        [V]iew invoice
+        [P]rocess payroll
+        [Q]uit the app after saving
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Please ENTER your selection: q
+***** Current contents of Employee Database *****
+SalariedEmployee
+Albert:
+Albertson
+aalberston@job.com
+111111111
+3500.00
+HourlyEmployee
+Bonnie
+Bosch
+bbosch@job.com
+222222222
+15.45
+40.00
+CommissionEmployee
+Charlie
+Cook
+ccook@job.com
+333333333
+7536.45
+0.07
+BasePlusCommissionEmployee
+David
+Derelict
+dderelict@job.com
+444444444
+50097.05
+0.05
+3000
+SalariedEmployee
+Edgar
+Evengard
+eevengard@job.com
+555555555
+1300
+HourlyEmployee
+Fred
+Flinstone
+fflinstone@job.com
+666666666
+17.35
+50
+Invoice
+000597
+01234
+seat
+2
+375.00
+CommissionEmployee
+Gina
+Gladstone
+ggladstone@job.com
+777777777
+7500
+0.08
+BasePlusCommissionEmployee
+Howard
+Henderson
+hhenderson@job.com
+888888888
+7600
+0.07
+3400
+Invoice
+000703
+56789
+tire
+4
+79.95
+HourlyEmployee
+Pablo
+Cincera
+pcincera@uw.edu
+333-222-1111
+29.00
+42
+CommissionEmployee
+Jonathon
+Roy
+jroy@uw.edu
+555-444-3333
+449.60
+0.63
+BasePlusCommissionEmployee
+Tony
+Jenkins
+tjenkins@uw.edu
+999-888-7777
+1041.44
+0.50
+60000
+Invoice
+123
+50083
+Light Bulb
+2
+8.93
+PS E:\EmpDB\EmpDB> Stop-Transcript
+**********************
+Windows PowerShell transcript end
+End time: 20230228193628
+**********************
